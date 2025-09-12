@@ -31,8 +31,9 @@
         .country-hover { stroke-width: 1.5; stroke: #c0392b; filter: brightness(1.1); }
         .grid-line { fill: none; stroke: #666; stroke-width: 0.2; opacity: 0.5; pointer-events: none; }
         .country-label { font-family: 'Noto Sans KR', sans-serif; text-anchor: middle; fill: #2c3e50; font-weight: 600; pointer-events: none; paint-order: stroke; stroke: white; stroke-linejoin: round; transition: all 0.1s ease-in-out; }
-        /* [수정] 이름 라벨 호버 시 글자색만 변경 */
         .label-hover { fill: #c0392b; }
+        .leader-line { stroke: black; stroke-width: 1; fill: none; }
+        .leader-dot { fill: black; }
     </style>
 </head>
 <body>
@@ -109,6 +110,21 @@
             updateDynamicSizes();
         }
 
+        // [추가] 고급 라벨링 알고리즘을 위한 헬퍼 함수
+        const isOverlapping = (box1, box2) => !(box1.x + box1.width < box2.x || box2.x + box2.width < box1.x || box1.y + box1.height < box2.y || box2.y + box2.height < box1.y);
+        const pointInPolygon = (point, vs) => {
+            const [x, y] = point;
+            let inside = false;
+            for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+                const [xi, yi] = vs[i];
+                const [xj, yj] = vs[j];
+                if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+                    inside = !inside;
+                }
+            }
+            return inside;
+        };
+
         function drawMap() {
             if (!worldData) return;
             const countryGroup = document.getElementById('countries');
@@ -130,27 +146,90 @@
 
                 if (countryName) {
                     const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    const largestPart = geometry.type === 'Polygon' ? geometry.coordinates[0] : geometry.coordinates.reduce((a, b) => a.flat().length > b.flat().length ? a : b)[0];
-                    const centerLonLat = getPolygonCenter(largestPart);
-                    const [x, y] = mercatorProjection(centerLonLat[0], centerLonLat[1]);
-                    
-                    label.setAttribute('x', x); label.setAttribute('y', y);
                     label.setAttribute('class', 'country-label');
                     label.textContent = countryName;
                     label.dataset.countryCode = countryCode;
-                    labelGroup.appendChild(label);
+                    labelGroup.appendChild(label); // BBox 계산을 위해 먼저 추가
+
+                    const largestPartCoords = geometry.type === 'Polygon' ? geometry.coordinates[0] : geometry.coordinates.reduce((a, b) => a.flat().length > b.flat().length ? a : b)[0];
+                    const projectedPolygon = largestPartCoords.map(p => mercatorProjection(p[0], p[1]));
+                    const centerLonLat = getPolygonCenter(largestPartCoords);
+                    const [cx, cy] = mercatorProjection(centerLonLat[0], centerLonLat[1]);
                     
-                    const bbox = label.getBBox();
-                    const padding = 5;
-                    const paddedBbox = { x: bbox.x - padding, y: bbox.y - padding, width: bbox.width + padding * 2, height: bbox.height + padding * 2 };
-                    let isOverlapping = false;
-                    for (const placedBox of placedLabelBoxes) {
-                        if (!(paddedBbox.x + paddedBbox.width < placedBox.x || placedBox.x + placedBox.width < paddedBbox.x || paddedBbox.y + paddedBbox.height < placedBox.y || placedBox.y + placedBox.height < paddedBbox.y)) {
-                            isOverlapping = true; break;
+                    const labelBBox = label.getBBox();
+                    const countryBBox = path.getBBox();
+                    
+                    let finalX = cx, finalY = cy;
+                    let needsLeaderLine = false;
+
+                    // 1. 영토가 이름보다 작은 경우, 무조건 리더선 사용
+                    if (countryBBox.width < labelBBox.width || countryBBox.height < labelBBox.height) {
+                        needsLeaderLine = true;
+                    }
+
+                    // 2. 이름 배치 위치 탐색 (충돌 회피 및 밀어내기)
+                    let bestPos = null;
+                    const searchRadius = Math.max(countryBBox.width, countryBBox.height, 30);
+                    const maxAttempts = 500;
+                    let attempts = 0;
+
+                    const checkPosition = (x, y) => {
+                        const testBox = { x: x - labelBBox.width / 2, y: y - labelBBox.height / 2, width: labelBBox.width, height: labelBBox.height };
+                        for(const placedBox of placedLabelBoxes) {
+                            if (isOverlapping(testBox, placedBox)) return false;
+                        }
+                        return true;
+                    };
+
+                    if (checkPosition(cx, cy)) { // 중앙이 베스트
+                        bestPos = { x: cx, y: cy };
+                    } else { // 중앙이 안되면 나선형으로 탐색
+                        for (let r = 5; r < searchRadius && attempts < maxAttempts; r += 5) {
+                            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 8) {
+                                attempts++;
+                                const testX = cx + r * Math.cos(angle);
+                                const testY = cy + r * Math.sin(angle);
+                                if (checkPosition(testX, testY)) {
+                                    bestPos = { x: testX, y: testY };
+                                    break;
+                                }
+                            }
+                            if (bestPos) break;
                         }
                     }
-                    if (isOverlapping) label.remove();
-                    else placedLabelBoxes.push(paddedBbox);
+
+                    if (bestPos) {
+                        finalX = bestPos.x; finalY = bestPos.y;
+                        if (!needsLeaderLine && !pointInPolygon([finalX, finalY], projectedPolygon)) {
+                            needsLeaderLine = true; // 밀려나서 영토 밖으로 나간 경우
+                        }
+                    } else { // 최적 위치를 못찾아도 일단 배치하고 리더선 사용
+                        needsLeaderLine = true;
+                        finalX = cx + countryBBox.width/2 + labelBBox.width/2 + 5;
+                        finalY = cy;
+                    }
+
+                    label.setAttribute('x', finalX);
+                    label.setAttribute('y', finalY);
+                    
+                    const finalBBox = label.getBBox();
+                    const padding = 5;
+                    placedLabelBoxes.push({ x: finalBBox.x - padding, y: finalBBox.y - padding, width: finalBBox.width + padding * 2, height: finalBBox.height + padding * 2 });
+
+                    if (needsLeaderLine) {
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+                        line.setAttribute('x2', finalX - (finalBBox.width / 2) * (finalX > cx ? 1 : -1));
+                        line.setAttribute('y2', finalY);
+                        line.setAttribute('class', 'leader-line');
+                        labelGroup.insertBefore(line, label);
+
+                        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        dot.setAttribute('cx', cx); dot.setAttribute('cy', cy);
+                        dot.setAttribute('r', 1.5);
+                        dot.setAttribute('class', 'leader-dot');
+                        labelGroup.insertBefore(dot, line);
+                    }
                 }
             });
 
@@ -162,8 +241,7 @@
         }
         
         function handleCountryHover(event) {
-            const code = event.target.dataset.countryCode;
-            if (!code) return;
+            const code = event.target.dataset.countryCode; if (!code) return;
             const label = document.querySelector(`.country-label[data-country-code="${code}"]`);
             if (event.type === 'mouseover') {
                 event.target.classList.add('country-hover');
@@ -223,13 +301,10 @@
             const oldWidth = mapWidth;
             const centerXRatio = (wrapper.scrollLeft + wrapper.clientWidth / 2) / oldWidth;
             const centerYRatio = (wrapper.scrollTop + wrapper.clientHeight / 2) / (oldWidth / 2);
-
             mapWidth = parseInt(this.value);
             mapHeight = mapWidth / 2;
             document.getElementById('mapSizeValue').textContent = `${mapWidth}x${mapHeight}px`;
-            
             initMap();
-            
             requestAnimationFrame(() => {
                 const newScrollLeft = (centerXRatio * mapWidth) - wrapper.clientWidth / 2;
                 const newScrollTop = (centerYRatio * mapHeight) - wrapper.clientHeight / 2;
@@ -245,8 +320,7 @@
         svg.addEventListener('wheel', e => {
             e.preventDefault();
             const rect = svg.getBoundingClientRect();
-            const point = svg.createSVGPoint();
-            point.x = e.clientX - rect.left; point.y = e.clientY - rect.top;
+            const point = svg.createSVGPoint(); point.x = e.clientX - rect.left; point.y = e.clientY - rect.top;
             const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
             const scaleFactor = e.deltaY > 0 ? 0.9 : 1.1;
             const newScale = Math.max(0.5, Math.min(50, currentScale * scaleFactor));
@@ -256,17 +330,8 @@
             updateTransform();
         });
 
-        svg.addEventListener('mousedown', e => { 
-            isDragging = true; panStart.x = currentX; panStart.y = currentY;
-            dragStart.x = e.clientX; dragStart.y = e.clientY; svg.style.cursor = 'grabbing'; 
-        });
-        svg.addEventListener('mousemove', e => { 
-            if (isDragging) {
-                const dx = e.clientX - dragStart.x; const dy = e.clientY - dragStart.y;
-                currentX = panStart.x + dx; currentY = panStart.y + dy; 
-                updateTransform(); 
-            }
-        });
+        svg.addEventListener('mousedown', e => { isDragging = true; panStart.x = currentX; panStart.y = currentY; dragStart.x = e.clientX; dragStart.y = e.clientY; svg.style.cursor = 'grabbing'; });
+        svg.addEventListener('mousemove', e => { if (isDragging) { const dx = e.clientX - dragStart.x; const dy = e.clientY - dragStart.y; currentX = panStart.x + dx; currentY = panStart.y + dy; updateTransform(); } });
         const endDrag = () => { isDragging = false; svg.style.cursor = 'grab'; };
         svg.addEventListener('mouseup', endDrag);
         svg.addEventListener('mouseleave', endDrag);
