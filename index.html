@@ -1,4 +1,4 @@
-<div class="control-group"><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -6,239 +6,31 @@
     <title>세계지도 학습</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        
-        .container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            z-index: 10;
-        }
-        
-        .title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2c3e50;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 8px 12px;
-            border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .toggle {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #4CAF50;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        .size-slider {
-            width: 120px;
-        }
-        
-        .btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .map-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(to bottom, #87CEEB 0%, #98D4EA 50%, #87CEEB 100%);
-        }
-        
-        #worldMap {
-            width: 100%;
-            height: 100%;
-            cursor: grab;
-        }
-        
-        #worldMap:active {
-            cursor: grabbing;
-        }
-        
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px 40px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: #2c3e50;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .country {
-            stroke-width: 1;
-            stroke: #d32f2f;
-            stroke-dasharray: none;
-            transition: all 0.2s ease;
-        }
-        
-        .country:hover {
-            stroke-width: 2;
-            filter: brightness(1.1);
-        }
-        
-        .country-border {
-            fill: none;
-            stroke: #000;
-            stroke-width: 0.3;
-            stroke-dasharray: 1,1;
-            pointer-events: none;
-        }
-        
-        .continent-border {
-            fill: none;
-            stroke: #d32f2f;
-            stroke-width: 1.5;
-            stroke-dasharray: none;
-            pointer-events: none;
-        }
-        
-        .ocean-border {
-            fill: none;
-            stroke: #2196f3;
-            stroke-width: 0.5;
-            pointer-events: none;
-        }
-        
-        .grid-line {
-            fill: none;
-            stroke: #666;
-            stroke-width: 0.2;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        
-        .country-label {
-            font-family: 'Noto Sans KR', sans-serif;
-            text-anchor: middle;
-            fill: #2c3e50;
-            font-weight: 600;
-            pointer-events: none;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
-        }
-        
-        .label-line {
-            stroke: #2c3e50;
-            stroke-width: 1;
-            fill: none;
-            pointer-events: none;
-        }
-        
-        @media (max-width: 768px) {
-            .header {
-                padding: 10px;
-            }
-            
-            .title {
-                font-size: 1.2rem;
-            }
-            
-            .controls {
-                gap: 10px;
-            }
-            
-            .control-group {
-                padding: 6px 10px;
-                gap: 6px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; overflow: hidden; }
+        .container { width: 100vw; height: 100vh; position: relative; display: flex; flex-direction: column; }
+        .header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; z-index: 10; }
+        .title { font-size: 1.5rem; font-weight: 700; color: #2c3e50; }
+        .controls { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        .control-group { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.7); padding: 8px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+        .toggle { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #4CAF50; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .size-slider { width: 120px; }
+        .btn { background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .map-wrapper { flex: 1; overflow: auto; /* 지도가 커질 경우 스크롤 생성 */ }
+        .map-container { position: relative; width: 100%; height: 100%; background: linear-gradient(to bottom, #87CEEB 0%, #98D4EA 50%, #87CEEB 100%); }
+        #worldMap { cursor: grab; }
+        #worldMap:active { cursor: grabbing; }
+        .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.9); padding: 20px 40px; border-radius: 10px; font-size: 1.2rem; font-weight: 500; color: #2c3e50; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); }
+        .country { stroke-width: 0.5; stroke: #333; }
+        .country:hover { stroke-width: 1.5; stroke: #c0392b; filter: brightness(1.1); }
+        .grid-line { fill: none; stroke: #666; stroke-width: 0.2; opacity: 0.5; pointer-events: none; }
+        .country-label { font-family: 'Noto Sans KR', sans-serif; text-anchor: middle; fill: #2c3e50; font-weight: 600; pointer-events: none; paint-order: stroke; stroke: white; stroke-width: 3px; stroke-linejoin: round; }
     </style>
 </head>
 <body>
@@ -255,29 +47,23 @@
                 </div>
                 <div class="control-group">
                     <label>글자 크기</label>
-                    <input type="range" id="fontSize" class="size-slider" min="8" max="24" value="12">
-                    <span id="fontSizeValue">12px</span>
+                    <input type="range" id="fontSize" class="size-slider" min="8" max="24" value="9">
+                    <span id="fontSizeValue">9px</span>
+                </div>
+                <div class="control-group">
+                    <label>지도 크기</label>
+                    <input type="range" id="mapSize" class="size-slider" min="1200" max="60000" value="1200" step="100">
+                    <span id="mapSizeValue">1200px</span>
                 </div>
                 <button class="btn" onclick="downloadPNG()">PNG 다운로드</button>
                 <button class="btn" onclick="downloadSVG()">SVG 다운로드</button>
             </div>
         </div>
-        <div class="map-container">
-            <div class="loading" id="loadingIndicator">지도 데이터를 불러오는 중...</div>
-            <svg id="worldMap" viewBox="0 0 1000 500">
-                <!-- 격자선 -->
-                <g id="gridLines"></g>
-                <!-- 해양 경계선 -->
-                <g id="oceanBorders"></g>
-                <!-- 국가들 -->
-                <g id="countries"></g>
-                <!-- 국가 경계선 -->
-                <g id="countryBorders"></g>
-                <!-- 대륙 경계선 -->
-                <g id="continentBorders"></g>
-                <!-- 국가 라벨 -->
-                <g id="countryLabels"></g>
-            </svg>
+        <div class="map-wrapper">
+            <div class="map-container">
+                <div class="loading" id="loadingIndicator">지도 데이터를 불러오는 중...</div>
+                <svg id="worldMap"></svg>
+            </div>
         </div>
     </div>
 
@@ -289,647 +75,220 @@
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
         let worldData = null;
-        
-        // 파스텔 색상 팔레트
-        const pastelColors = [
-            '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFDFBA',
-            '#E0BBE4', '#FFC3A0', '#B5EAD7', '#C7CEEA', '#FFDAB9',
-            '#E6E6FA', '#F0E68C', '#DDA0DD', '#98FB98', '#F0FFFF',
-            '#FFE4E1', '#E0FFFF', '#FAFAD2', '#D3D3D3', '#FFCCCB',
-            '#FFFACD', '#F5DEB3', '#FFE4B5', '#FFEFD5', '#FDF5E6',
-            '#F0F8FF', '#FAEBD7', '#FFF8DC', '#F5F5DC', '#FFE4C4'
-        ];
-        
-        // 국가 이름 한글 매핑
-        const countryNames = {
-            'KR': '한국', 'KP': '북한', 'CN': '중국', 'JP': '일본', 'MN': '몽골',
-            'RU': '러시아', 'KZ': '카자흐스탄', 'KG': '키르기스스탄', 'TJ': '타지키스탄',
-            'UZ': '우즈베키스탄', 'TM': '투르크메니스탄', 'AF': '아프가니스탄',
-            'PK': '파키스탄', 'IN': '인도', 'NP': '네팔', 'BT': '부탄', 'BD': '방글라데시',
-            'MM': '미얀마', 'TH': '태국', 'LA': '라오스', 'VN': '베트남', 'KH': '캄보디아',
-            'MY': '말레이시아', 'SG': '싱가포르', 'BN': '브루나이', 'ID': '인도네시아',
-            'TL': '동티모르', 'PH': '필리핀', 'LK': '스리랑카', 'MV': '몰디브',
-            'US': '미국', 'CA': '캐나다', 'MX': '멕시코', 'GT': '과테말라', 'BZ': '벨리즈',
-            'SV': '엘살바도르', 'HN': '온두라스', 'NI': '니카라과', 'CR': '코스타리카',
-            'PA': '파나마', 'CU': '쿠바', 'JM': '자메이카', 'HT': '아이티', 'DO': '도미니카공화국',
-            'BR': '브라질', 'AR': '아르헨티나', 'CL': '칠레', 'PE': '페루', 'BO': '볼리비아',
-            'PY': '파라과이', 'UY': '우루과이', 'CO': '콜롬비아', 'VE': '베네수엘라',
-            'GY': '가이아나', 'SR': '수리남', 'EC': '에콰도르',
-            'GB': '영국', 'IE': '아일랜드', 'IS': '아이슬란드', 'NO': '노르웨이', 'SE': '스웨덴',
-            'FI': '핀란드', 'DK': '덴마크', 'DE': '독일', 'NL': '네덜란드', 'BE': '벨기에',
-            'LU': '룩셈부르크', 'FR': '프랑스', 'CH': '스위스', 'AT': '오스트리아',
-            'IT': '이탈리아', 'ES': '스페인', 'PT': '포르투갈', 'AD': '안도라', 'MC': '모나코',
-            'VA': '바티칸', 'SM': '산마리노', 'MT': '몰타', 'CY': '키프로스', 'GR': '그리스',
-            'AL': '알바니아', 'MK': '북마케도니아', 'BG': '불가리아', 'RO': '루마니아',
-            'MD': '몰도바', 'UA': '우크라이나', 'BY': '벨라루스', 'LT': '리투아니아',
-            'LV': '라트비아', 'EE': '에스토니아', 'PL': '폴란드', 'CZ': '체코', 'SK': '슬로바키아',
-            'HU': '헝가리', 'SI': '슬로베니아', 'HR': '크로아티아', 'BA': '보스니아헤르체고비나',
-            'RS': '세르비아', 'ME': '몬테네그로', 'XK': '코소보',
-            'EG': '이집트', 'LY': '리비아', 'TN': '튀니지', 'DZ': '알제리', 'MA': '모로코',
-            'SD': '수단', 'SS': '남수단', 'ET': '에티오피아', 'ER': '에리트레아', 'DJ': '지부티',
-            'SO': '소말리아', 'KE': '케냐', 'UG': '우간다', 'RW': '르완다', 'BI': '부룬디',
-            'TZ': '탄자니아', 'MZ': '모잠비크', 'MW': '말라위', 'ZM': '잠비아', 'ZW': '짐바브웨',
-            'BW': '보츠와나', 'NA': '나미비아', 'ZA': '남아프리카공화국', 'SZ': '에스와티니',
-            'LS': '레소토', 'MG': '마다가스카르', 'MU': '모리셔스', 'SC': '세이셸',
-            'AO': '앙골라', 'CD': '콩고민주공화국', 'CG': '콩고공화국', 'CF': '중앙아프리카공화국',
-            'CM': '카메룬', 'GQ': '적도기니', 'GA': '가봉', 'ST': '상투메프린시페',
-            'TD': '차드', 'NE': '니제르', 'NG': '나이지리아', 'BJ': '베냉', 'TG': '토고',
-            'GH': '가나', 'CI': "코트디부아르", 'LR': '라이베리아', 'SL': '시에라리온',
-            'GN': '기니', 'GW': '기니비사우', 'SN': '세네갈', 'GM': '감비아', 'ML': '말리',
-            'BF': '부르키나파소', 'MR': '모리타니', 'CV': '카보베르데',
-            'AU': '오스트레일리아', 'NZ': '뉴질랜드', 'PG': '파푸아뉴기니', 'FJ': '피지',
-            'SB': '솔로몬제도', 'VU': '바누아투', 'NC': '뉴칼레도니아', 'WS': '사모아',
-            'TO': '통가', 'KI': '키리바시', 'TV': '투발루', 'NR': '나우루', 'PW': '팔라우',
-            'FM': '미크로네시아', 'MH': '마셜제도',
-            'SA': '사우디아라비아', 'IR': '이란', 'IQ': '이라크', 'SY': '시리아', 'JO': '요단',
-            'LB': '레바논', 'IL': '이스라엘', 'PS': '팔레스타인', 'TR': '튀르키예',
-            'AE': '아랍에미리트', 'QA': '카타르', 'BH': '바레인', 'KW': '쿠웨이트',
-            'OM': '오만', 'YE': '예멘', 'AM': '아르메니아', 'AZ': '아제르바이잔', 'GE': '조지아'
-        };
-        
-        // 메르카토르 투영 함수
+
+        // [추가] 지도 크기를 동적으로 관리하는 변수
+        let mapWidth = 1200;
+        let mapHeight = 600;
+
+        const pastelColors = [ '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E0BBE4', '#FFC3A0', '#B5EAD7', '#C7CEEA', '#FFDAB9' ];
+        const countryNames = { 'KR': '한국', 'KP': '북한', 'CN': '중국', 'JP': '일본', 'MN': '몽골', 'RU': '러시아', 'KZ': '카자흐스탄', 'KG': '키르기스스탄', 'TJ': '타지키스탄', 'UZ': '우즈베키스탄', 'TM': '투르크메니스탄', 'AF': '아프가니스탄', 'PK': '파키스탄', 'IN': '인도', 'NP': '네팔', 'BT': '부탄', 'BD': '방글라데시', 'MM': '미얀마', 'TH': '태국', 'LA': '라오스', 'VN': '베트남', 'KH': '캄보디아', 'MY': '말레이시아', 'SG': '싱가포르', 'BN': '브루나이', 'ID': '인도네시아', 'TL': '동티모르', 'PH': '필리핀', 'LK': '스리랑카', 'MV': '몰디브', 'US': '미국', 'CA': '캐나다', 'MX': '멕시코', 'GT': '과테말라', 'BZ': '벨리즈', 'SV': '엘살바도르', 'HN': '온두라스', 'NI': '니카라과', 'CR': '코스타리카', 'PA': '파나마', 'CU': '쿠바', 'JM': '자메이카', 'HT': '아이티', 'DO': '도미니카공화국', 'BR': '브라질', 'AR': '아르헨티나', 'CL': '칠레', 'PE': '페루', 'BO': '볼리비아', 'PY': '파라과이', 'UY': '우루과이', 'CO': '콜롬비아', 'VE': '베네수엘라', 'GY': '가이아나', 'SR': '수리남', 'EC': '에콰도르', 'GB': '영국', 'IE': '아일랜드', 'IS': '아이슬란드', 'NO': '노르웨이', 'SE': '스웨덴', 'FI': '핀란드', 'DK': '덴마크', 'DE': '독일', 'NL': '네덜란드', 'BE': '벨기에', 'LU': '룩셈부르크', 'FR': '프랑스', 'CH': '스위스', 'AT': '오스트리아', 'IT': '이탈리아', 'ES': '스페인', 'PT': '포르투갈', 'AD': '안도라', 'MC': '모나코', 'VA': '바티칸', 'SM': '산마리노', 'MT': '몰타', 'CY': '키프로스', 'GR': '그리스', 'AL': '알바니아', 'MK': '북마케도니아', 'BG': '불가리아', 'RO': '루마니아', 'MD': '몰도바', 'UA': '우크라이나', 'BY': '벨라루스', 'LT': '리투아니아', 'LV': '라트비아', 'EE': '에스토니아', 'PL': '폴란드', 'CZ': '체코', 'SK': '슬로바키아', 'HU': '헝가리', 'SI': '슬로베니아', 'HR': '크로아티아', 'BA': '보스니아헤르체고비나', 'RS': '세르비아', 'ME': '몬테네그로', 'XK': '코소보', 'EG': '이집트', 'LY': '리비아', 'TN': '튀니지', 'DZ': '알제리', 'MA': '모로코', 'SD': '수단', 'SS': '남수단', 'ET': '에티오피아', 'ER': '에리트레아', 'DJ': '지부티', 'SO': '소말리아', 'KE': '케냐', 'UG': '우간다', 'RW': '르완다', 'BI': '부룬디', 'TZ': '탄자니아', 'MZ': '모잠비크', 'MW': '말라위', 'ZM': '잠비아', 'ZW': '짐바브웨', 'BW': '보츠와나', 'NA': '나미비아', 'ZA': '남아프리카공화국', 'SZ': '에스와티니', 'LS': '레소토', 'MG': '마다가스카르', 'MU': '모리셔스', 'SC': '세이셸', 'AO': '앙골라', 'CD': '콩고민주공화국', 'CG': '콩고공화국', 'CF': '중앙아프리카공화국', 'CM': '카메룬', 'GQ': '적도기니', 'GA': '가봉', 'ST': '상투메프린시페', 'TD': '차드', 'NE': '니제르', 'NG': '나이지리아', 'BJ': '베냉', 'TG': '토고', 'GH': '가나', 'CI': "코트디부아르", 'LR': '라이베리아', 'SL': '시에라리온', 'GN': '기니', 'GW': '기니비사우', 'SN': '세네갈', 'GM': '감비아', 'ML': '말리', 'BF': '부르키나파소', 'MR': '모리타니', 'CV': '카보베르데', 'AU': '호주', 'NZ': '뉴질랜드', 'PG': '파푸아뉴기니', 'FJ': '피지', 'SB': '솔로몬제도', 'VU': '바누아투', 'NC': '뉴칼레도니아', 'WS': '사모아', 'TO': '통가', 'KI': '키리바시', 'TV': '투발루', 'NR': '나우루', 'PW': '팔라우', 'FM': '미크로네시아', 'MH': '마셜제도', 'SA': '사우디아라비아', 'IR': '이란', 'IQ': '이라크', 'SY': '시리아', 'JO': '요르단', 'LB': '레바논', 'IL': '이스라엘', 'PS': '팔레스타인', 'TR': '튀르키예', 'AE': '아랍에미리트', 'QA': '카타르', 'BH': '바레인', 'KW': '쿠웨이트', 'OM': '오만', 'YE': '예멘', 'AM': '아르메니아', 'AZ': '아제르바이잔', 'GE': '조지아' };
+
+        // [리팩토링] 지도 크기를 인자로 받아 동적으로 좌표 계산
         function mercatorProjection(lon, lat) {
-            const x = (lon + 180) * (1000 / 360);
+            const x = (lon + 180) * (mapWidth / 360);
             const latRad = lat * Math.PI / 180;
             const mercN = Math.log(Math.tan((Math.PI / 4) + (latRad / 2)));
-            const y = (500 / 2) - (1000 * mercN) / (2 * Math.PI);
-            return [x, Math.max(0, Math.min(500, y))];
+            const y = (mapHeight / 2) - (mapWidth * mercN) / (2 * Math.PI);
+            return [x, y];
         }
-        
-        // GeoJSON 경로를 SVG 경로로 변환
+
         function geoJsonToSvgPath(coordinates, type) {
+            let path = '';
             if (type === 'Polygon') {
-                return coordinates.map(ring => {
-                    return ring.map((coord, i) => {
-                        const [x, y] = mercatorProjection(coord[0], coord[1]);
-                        return (i === 0 ? 'M' : 'L') + x + ',' + y;
-                    }).join(' ') + 'Z';
-                }).join(' ');
+                path = coordinates.map(ring => 'M' + ring.map(p => mercatorProjection(p[0], p[1]).join(',')).join('L') + 'Z').join('');
             } else if (type === 'MultiPolygon') {
-                return coordinates.map(polygon => {
-                    return polygon.map(ring => {
-                        return ring.map((coord, i) => {
-                            const [x, y] = mercatorProjection(coord[0], coord[1]);
-                            return (i === 0 ? 'M' : 'L') + x + ',' + y;
-                        }).join(' ') + 'Z';
-                    }).join(' ');
-                }).join(' ');
+                path = coordinates.map(polygon => polygon.map(ring => 'M' + ring.map(p => mercatorProjection(p[0], p[1]).join(',')).join('L') + 'Z').join('')).join('');
             }
-            return '';
+            return path;
         }
-        
-        // 폴리곤의 중심점 계산
-        function getPolygonCenter(coordinates, type) {
-            let allCoords = [];
-            
-            if (type === 'Polygon') {
-                allCoords = coordinates[0]; // 외부 링만 사용
-            } else if (type === 'MultiPolygon') {
-                // 가장 큰 폴리곤의 외부 링 사용
-                let largestPolygon = coordinates[0];
-                let maxArea = 0;
-                coordinates.forEach(polygon => {
-                    const area = polygon[0].length;
-                    if (area > maxArea) {
-                        maxArea = area;
-                        largestPolygon = polygon;
-                    }
-                });
-                allCoords = largestPolygon[0];
-            }
-            
-            // 경계 박스 중심 계산
-            let minX = Infinity, maxX = -Infinity;
-            let minY = Infinity, maxY = -Infinity;
-            
-            allCoords.forEach(coord => {
-                const [x, y] = mercatorProjection(coord[0], coord[1]);
-                minX = Math.min(minX, x);
-                maxX = Math.max(maxX, x);
-                minY = Math.min(minY, y);
-                maxY = Math.max(maxY, y);
-            });
-            
-            return [(minX + maxX) / 2, (minY + maxY) / 2];
-        }
-        
-        // Natural Earth 데이터 로드
+
         async function loadWorldData() {
+            const loadingIndicator = document.getElementById('loadingIndicator');
             try {
-                // GitHub에서 Natural Earth 데이터 로드
-                const response = await fetch('https://raw.githubusercontent.com/martynafford/natural-earth-geojson/master/50m/cultural/ne_50m_admin_0_countries.geojson');
-                if (!response.ok) {
-                    throw new Error('네트워크 오류');
-                }
-                const data = await response.json();
-                worldData = data;
-                
-                document.getElementById('loadingIndicator').style.display = 'none';
-                drawMap();
+                const response = await fetch('https://raw.githubusercontent.com/martynafford/natural-earth-geojson/refs/heads/master/50m/cultural/ne_50m_admin_0_countries.json');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                worldData = await response.json();
+                loadingIndicator.style.display = 'none';
+                initMap();
             } catch (error) {
                 console.error('지도 데이터 로드 실패:', error);
-                // 백업 단순 지도 데이터 사용
-                createSimpleMap();
-                document.getElementById('loadingIndicator').style.display = 'none';
+                loadingIndicator.textContent = '지도 데이터 로드에 실패했습니다.';
             }
         }
         
-        // 백업용 단순 지도
-        function createSimpleMap() {
-            const simpleCountries = [
-                // 간단한 국가 폴리곤들
-                { name: '미국', code: 'US', path: 'M150,200 L350,200 L350,280 L150,280 Z', color: pastelColors[0] },
-                { name: '캐나다', code: 'CA', path: 'M150,120 L450,120 L450,200 L150,200 Z', color: pastelColors[1] },
-                { name: '브라질', code: 'BR', path: 'M250,320 L400,320 L400,450 L250,450 Z', color: pastelColors[2] },
-                { name: '러시아', code: 'RU', path: 'M500,100 L900,100 L900,220 L500,220 Z', color: pastelColors[3] },
-                { name: '중국', code: 'CN', path: 'M700,180 L850,180 L850,280 L700,280 Z', color: pastelColors[4] },
-                { name: '오스트레일리아', code: 'AU', path: 'M750,350 L900,350 L900,420 L750,420 Z', color: pastelColors[5] }
-            ];
+        // [추가] 지도 초기 설정 함수
+        function initMap() {
+            const svg = document.getElementById('worldMap');
+            svg.setAttribute('width', mapWidth);
+            svg.setAttribute('height', mapHeight);
+            svg.setAttribute('viewBox', `0 0 ${mapWidth} ${mapHeight}`);
             
-            const countryGroup = document.getElementById('countries');
-            const labelGroup = document.getElementById('countryLabels');
-            
-            simpleCountries.forEach(country => {
-                // 국가 영역
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', country.path);
-                path.setAttribute('fill', country.color);
-                path.setAttribute('class', 'country');
-                path.setAttribute('data-country', country.code);
-                countryGroup.appendChild(path);
-                
-                // 국가 라벨
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', 325); // 임시 중심
-                text.setAttribute('y', 200);
-                text.setAttribute('class', 'country-label');
-                text.setAttribute('font-size', '12');
-                text.textContent = country.name;
-                labelGroup.appendChild(text);
-            });
-            
-            drawGridLines();
+            // g 그룹들을 초기화
+            svg.innerHTML = `
+                <g id="gridLines"></g>
+                <g id="countries"></g>
+                <g id="countryLabels"></g>
+            `;
+            drawMap();
         }
-        
-        // 실제 지도 그리기
+
         function drawMap() {
             if (!worldData) return;
             
             const countryGroup = document.getElementById('countries');
-            const borderGroup = document.getElementById('countryBorders');
             const labelGroup = document.getElementById('countryLabels');
-            
-            let colorIndex = 0;
-            const usedColors = new Map();
-            const adjacencyCheck = new Map(); // 인접국 색상 충돌 방지
-            
+            countryGroup.innerHTML = '';
+            labelGroup.innerHTML = '';
+
             worldData.features.forEach((feature, index) => {
-                const properties = feature.properties;
-                const geometry = feature.geometry;
-                const countryCode = properties.ISO_A2 || properties.ADM0_A3 || properties.ISO_A3;
-                const countryName = countryNames[countryCode] || properties.NAME_KO || properties.NAME || properties.ADMIN || '미지정';
-                
-                // 색상 할당 (인접국과 다르게)
-                if (!usedColors.has(countryCode)) {
-                    let selectedColor;
-                    let attempts = 0;
-                    do {
-                        selectedColor = pastelColors[(colorIndex + attempts) % pastelColors.length];
-                        attempts++;
-                    } while (attempts < pastelColors.length && isColorUsedByNeighbors(countryCode, selectedColor, adjacencyCheck));
+                const { properties, geometry } = feature;
+                if (!geometry || properties.ISO_A2 === '-99') return;
+
+                const countryCode = properties.ISO_A2;
+                // [수정] 한글 이름이 없으면 ADMIN(영문 전체이름)을 사용
+                const countryName = countryNames[countryCode] || properties.ADMIN;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', geoJsonToSvgPath(geometry.coordinates, geometry.type));
+                path.setAttribute('class', 'country');
+                path.setAttribute('fill', pastelColors[index % pastelColors.length]);
+                countryGroup.appendChild(path);
+
+                if (countryName) {
+                    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    let largestPart = geometry.type === 'Polygon' ? geometry.coordinates[0] : geometry.coordinates.reduce((a, b) => a.flat().length > b.flat().length ? a : b)[0];
+                    const center = mercatorProjection(getPolygonCenter(largestPart)[0], getPolygonCenter(largestPart)[1]);
                     
-                    usedColors.set(countryCode, selectedColor);
-                    adjacencyCheck.set(countryCode, selectedColor);
-                    colorIndex = (colorIndex + attempts) % pastelColors.length;
-                }
-                const color = usedColors.get(countryCode);
-                
-                // SVG 경로 생성 - 실제 국경선 사용
-                const pathData = geoJsonToSvgPath(geometry.coordinates, geometry.type);
-                
-                if (pathData) {
-                    // 국가 영역 (실제 국경선)
-                    const countryPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    countryPath.setAttribute('d', pathData);
-                    countryPath.setAttribute('fill', color);
-                    countryPath.setAttribute('class', 'country');
-                    countryPath.setAttribute('data-country', countryCode);
-                    countryPath.setAttribute('title', countryName);
-                    countryGroup.appendChild(countryPath);
-                    
-                    // 국가 경계선 (실제 국경선을 따라)
-                    const borderPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    borderPath.setAttribute('d', pathData);
-                    borderPath.setAttribute('class', 'country-border');
-                    borderGroup.appendChild(borderPath);
-                    
-                    // 국가 라벨
-                    if (countryName !== '미지정') {
-                        // 복수 영토를 가진 국가 처리 (미국, 러시아 등)
-                        if (geometry.type === 'MultiPolygon') {
-                            const largePolygons = geometry.coordinates
-                                .map((polygon, idx) => ({
-                                    polygon: polygon,
-                                    area: calculatePolygonArea(polygon[0]),
-                                    index: idx
-                                }))
-                                .filter(p => p.area > 50) // 일정 크기 이상만 라벨 표시
-                                .sort((a, b) => b.area - a.area)
-                                .slice(0, 3); // 최대 3개까지만
-                            
-                            largePolygons.forEach(polyData => {
-                                const [centerX, centerY] = getPolygonCenter([polyData.polygon], 'Polygon');
-                                if (centerX >= 0 && centerX <= 1000 && centerY >= 0 && centerY <= 500) {
-                                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                                    text.setAttribute('x', centerX);
-                                    text.setAttribute('y', centerY);
-                                    text.setAttribute('class', 'country-label');
-                                    text.setAttribute('font-size', '12');
-                                    text.textContent = countryName;
-                                    
-                                    // 작은 영토는 선으로 연결
-                                    if (polyData.area < 200) {
-                                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                                        line.setAttribute('x1', centerX);
-                                        line.setAttribute('y1', centerY);
-                                        line.setAttribute('x2', centerX + 30);
-                                        line.setAttribute('y2', centerY - 20);
-                                        line.setAttribute('class', 'label-line');
-                                        labelGroup.appendChild(line);
-                                        
-                                        text.setAttribute('x', centerX + 35);
-                                        text.setAttribute('y', centerY - 15);
-                                        text.setAttribute('text-anchor', 'start');
-                                    }
-                                    
-                                    labelGroup.appendChild(text);
-                                }
-                            });
-                        } else {
-                            const [centerX, centerY] = getPolygonCenter(geometry.coordinates, geometry.type);
-                            if (centerX >= 0 && centerX <= 1000 && centerY >= 0 && centerY <= 500) {
-                                const area = calculatePolygonArea(geometry.coordinates[0]);
-                                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                                text.setAttribute('x', centerX);
-                                text.setAttribute('y', centerY);
-                                text.setAttribute('class', 'country-label');
-                                text.setAttribute('font-size', '12');
-                                text.textContent = countryName;
-                                
-                                // 매우 작은 국가는 선으로 연결
-                                if (area < 100) {
-                                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                                    line.setAttribute('x1', centerX);
-                                    line.setAttribute('y1', centerY);
-                                    line.setAttribute('x2', centerX + 25);
-                                    line.setAttribute('y2', centerY - 15);
-                                    line.setAttribute('class', 'label-line');
-                                    labelGroup.appendChild(line);
-                                    
-                                    text.setAttribute('x', centerX + 30);
-                                    text.setAttribute('y', centerY - 10);
-                                    text.setAttribute('text-anchor', 'start');
-                                }
-                                
-                                labelGroup.appendChild(text);
-                            }
-                        }
-                    }
+                    label.setAttribute('x', center[0]);
+                    label.setAttribute('y', center[1]);
+                    label.setAttribute('class', 'country-label');
+                    label.textContent = countryName;
+                    labelGroup.appendChild(label);
                 }
             });
-            
             drawGridLines();
-            drawOceanBorders();
-            drawContinentBorders();
+            updateLabelStyles();
         }
         
-        // 폴리곤 면적 계산 (간단한 방식)
-        function calculatePolygonArea(coordinates) {
-            let area = 0;
-            const n = coordinates.length;
-            for (let i = 0; i < n; i++) {
-                const j = (i + 1) % n;
-                const [x1, y1] = mercatorProjection(coordinates[i][0], coordinates[i][1]);
-                const [x2, y2] = mercatorProjection(coordinates[j][0], coordinates[j][1]);
-                area += x1 * y2 - x2 * y1;
-            }
-            return Math.abs(area) / 2;
+        function getPolygonCenter(coords) {
+            let lonMin = 180, latMin = 90, lonMax = -180, latMax = -90;
+            coords.forEach(p => {
+                if (p[0] < lonMin) lonMin = p[0];
+                if (p[1] < latMin) latMin = p[1];
+                if (p[0] > lonMax) lonMax = p[0];
+                if (p[1] > latMax) latMax = p[1];
+            });
+            return [(lonMin + lonMax) / 2, (latMin + latMax) / 2];
         }
-        
-        // 인접국 색상 충돌 검사 (간단한 버전)
-        function isColorUsedByNeighbors(countryCode, color, adjacencyCheck) {
-            // 실제 구현에서는 더 정교한 인접성 검사가 필요하지만,
-            // 여기서는 간단하게 최근 사용된 색상과의 충돌만 검사
-            const recentColors = Array.from(adjacencyCheck.values()).slice(-5);
-            return recentColors.includes(color);
-        }
-        
-        // 격자선 그리기
+
+        // [리팩토링] 동적 지도 크기에 맞게 격자선 다시 그리기
         function drawGridLines() {
             const grid = document.getElementById('gridLines');
-            grid.innerHTML = ''; // 기존 격자선 제거
-            
-            // 경선 (세로선)
+            grid.innerHTML = '';
             for (let lon = -180; lon <= 180; lon += 30) {
-                const [x] = mercatorProjection(lon, 0);
-                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                line.setAttribute('x1', x);
-                line.setAttribute('y1', 0);
-                line.setAttribute('x2', x);
-                line.setAttribute('y2', 500);
-                line.setAttribute('class', 'grid-line');
-                grid.appendChild(line);
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                let d = 'M';
+                for (let lat = -85; lat <= 85; lat += 5) {
+                    d += mercatorProjection(lon, lat).join(',') + 'L';
+                }
+                path.setAttribute('d', d.slice(0, -1));
+                path.setAttribute('class', 'grid-line');
+                grid.appendChild(path);
             }
-            
-            // 위선 (가로선)
             for (let lat = -60; lat <= 80; lat += 30) {
-                const [, y] = mercatorProjection(0, lat);
-                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                line.setAttribute('x1', 0);
-                line.setAttribute('y1', y);
-                line.setAttribute('x2', 1000);
-                line.setAttribute('y2', y);
-                line.setAttribute('class', 'grid-line');
-                grid.appendChild(line);
+                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                 let d = 'M';
+                 for (let lon = -180; lon <= 180; lon += 5) {
+                    d += mercatorProjection(lon, lat).join(',') + 'L';
+                 }
+                 path.setAttribute('d', d.slice(0, -1));
+                 path.setAttribute('class', 'grid-line');
+                 grid.appendChild(path);
             }
         }
-        
-        // 해양 경계선 그리기
-        function drawOceanBorders() {
-            const oceanGroup = document.getElementById('oceanBorders');
-            
-            // 태평양과 대서양 경계 (간소화)
-            const border1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            border1.setAttribute('x1', 0);
-            border1.setAttribute('y1', 0);
-            border1.setAttribute('x2', 0);
-            border1.setAttribute('y2', 500);
-            border1.setAttribute('class', 'ocean-border');
-            oceanGroup.appendChild(border1);
-            
-            const border2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            border2.setAttribute('x1', 1000);
-            border2.setAttribute('y1', 0);
-            border2.setAttribute('x2', 1000);
-            border2.setAttribute('y2', 500);
-            border2.setAttribute('class', 'ocean-border');
-            oceanGroup.appendChild(border2);
-        }
-        
-        // 대륙 경계선 그리기
-        function drawContinentBorders() {
-            const continentGroup = document.getElementById('continentBorders');
-            
-            // 유럽-아시아 경계 (우랄산맥 간소화)
-            const europeAsia = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            europeAsia.setAttribute('d', 'M600,100 L600,250');
-            europeAsia.setAttribute('class', 'continent-border');
-            continentGroup.appendChild(europeAsia);
-            
-            // 아프리카-아시아 경계 (수에즈 운하 간소화)
-            const africaAsia = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            africaAsia.setAttribute('d', 'M530,240 L530,270');
-            africaAsia.setAttribute('class', 'continent-border');
-            continentGroup.appendChild(africaAsia);
-            
-            // 북미-남미 경계 (파나마 운하 간소화)
-            const northSouthAmerica = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            northSouthAmerica.setAttribute('d', 'M220,320 L280,320');
-            northSouthAmerica.setAttribute('class', 'continent-border');
-            continentGroup.appendChild(northSouthAmerica);
-        }
-        
-        // 이벤트 리스너
-        document.getElementById('showLabels').addEventListener('change', function() {
-            const labels = document.getElementById('countryLabels');
-            labels.style.display = this.checked ? 'block' : 'none';
-        });
-        
-        document.getElementById('fontSize').addEventListener('input', function() {
-            const size = this.value;
-            document.getElementById('fontSizeValue').textContent = size + 'px';
-            const labels = document.querySelectorAll('.country-label');
-            labels.forEach(label => {
-                label.setAttribute('font-size', size);
+
+        function updateLabelStyles() {
+            const fontSize = document.getElementById('fontSize').value;
+            document.getElementById('fontSizeValue').textContent = fontSize + 'px';
+            document.querySelectorAll('.country-label').forEach(label => {
+                label.setAttribute('font-size', fontSize);
             });
-        });
+            document.getElementById('countryLabels').style.display = document.getElementById('showLabels').checked ? '' : 'none';
+        }
+
+        document.getElementById('showLabels').addEventListener('change', updateLabelStyles);
+        document.getElementById('fontSize').addEventListener('input', updateLabelStyles);
         
-        // 줌 및 팬 기능
+        // [추가] 지도 크기 슬라이더 이벤트 리스너
+        document.getElementById('mapSize').addEventListener('input', function() {
+            mapWidth = parseInt(this.value);
+            mapHeight = mapWidth / 2;
+            document.getElementById('mapSizeValue').textContent = mapWidth + 'px';
+            initMap(); // 지도 크기 변경 시 지도 다시 그리기
+        });
+
         const svg = document.getElementById('worldMap');
-        const mapContainer = document.querySelector('.map-container');
-        
-        // 마우스 휠 줌 (마우스 위치 중심)
-        svg.addEventListener('wheel', function(e) {
-            e.preventDefault();
-            
-            // 마우스 위치 계산
-            const rect = svg.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-            
-            // SVG 좌표계로 변환
-            const svgPoint = svg.createSVGPoint();
-            svgPoint.x = mouseX;
-            svgPoint.y = mouseY;
-            const ctm = svg.getScreenCTM().inverse();
-            const transformedPoint = svgPoint.matrixTransform(ctm);
-            
-            // 줌 전 마우스 위치 (변환된 좌표계 기준)
-            const beforeZoomX = (transformedPoint.x - currentX) / currentScale;
-            const beforeZoomY = (transformedPoint.y - currentY) / currentScale;
-            
-            // 줌 배율 조정
-            const delta = e.deltaY > 0 ? 0.9 : 1.1;
-            const newScale = Math.max(0.5, Math.min(5, currentScale * delta));
-            
-            // 줌 후 마우스 위치 계산
-            const afterZoomX = beforeZoomX * newScale;
-            const afterZoomY = beforeZoomY * newScale;
-            
-            // 새로운 변환 값 계산
-            currentX = transformedPoint.x - afterZoomX;
-            currentY = transformedPoint.y - afterZoomY;
-            currentScale = newScale;
-            
-            updateTransform();
-        });
-        
-        // 드래그 이벤트
-        svg.addEventListener('mousedown', startDrag);
-        svg.addEventListener('mousemove', drag);
-        svg.addEventListener('mouseup', endDrag);
-        svg.addEventListener('mouseleave', endDrag);
-        
-        // 터치 이벤트
-        svg.addEventListener('touchstart', handleTouchStart, { passive: false });
-        svg.addEventListener('touchmove', handleTouchMove, { passive: false });
-        svg.addEventListener('touchend', handleTouchEnd);
-        
-        let touchStartDistance = 0;
-        let touchStartScale = 1;
-        let touchStartCenter = { x: 0, y: 0 };
-        
-        function startDrag(e) {
-            isDragging = true;
-            dragStart.x = e.clientX - currentX;
-            dragStart.y = e.clientY - currentY;
-            svg.style.cursor = 'grabbing';
-        }
-        
-        function drag(e) {
-            if (!isDragging) return;
-            currentX = e.clientX - dragStart.x;
-            currentY = e.clientY - dragStart.y;
-            updateTransform();
-        }
-        
-        function endDrag() {
-            isDragging = false;
-            svg.style.cursor = 'grab';
-        }
-        
-        function handleTouchStart(e) {
-            e.preventDefault();
-            if (e.touches.length === 2) {
-                // 핀치 줌 시작
-                touchStartDistance = getTouchDistance(e.touches);
-                touchStartScale = currentScale;
-                touchStartCenter = getTouchCenter(e.touches);
-            } else if (e.touches.length === 1) {
-                // 단일 터치 드래그 시작
-                const touch = e.touches[0];
-                const rect = svg.getBoundingClientRect();
-                dragStart.x = touch.clientX - currentX;
-                dragStart.y = touch.clientY - currentY;
-                isDragging = true;
-            }
-        }
-        
-        function handleTouchMove(e) {
-            e.preventDefault();
-            if (e.touches.length === 2) {
-                // 핀치 줌
-                const distance = getTouchDistance(e.touches);
-                const center = getTouchCenter(e.touches);
-                const scale = (distance / touchStartDistance) * touchStartScale;
-                
-                // 줌 중심점 계산
-                const beforeZoomX = (touchStartCenter.x - currentX) / currentScale;
-                const beforeZoomY = (touchStartCenter.y - currentY) / currentScale;
-                
-                currentScale = Math.max(0.5, Math.min(5, scale));
-                
-                // 새로운 변환 값 계산
-                const afterZoomX = beforeZoomX * currentScale;
-                const afterZoomY = beforeZoomY * currentScale;
-                
-                currentX = center.x - afterZoomX;
-                currentY = center.y - afterZoomY;
-                
-                updateTransform();
-            } else if (e.touches.length === 1 && isDragging) {
-                // 단일 터치 드래그
-                const touch = e.touches[0];
-                currentX = touch.clientX - dragStart.x;
-                currentY = touch.clientY - dragStart.y;
-                updateTransform();
-            }
-        }
-        
-        function handleTouchEnd(e) {
-            if (e.touches.length === 0) {
-                isDragging = false;
-            }
-        }
-        
-        function getTouchDistance(touches) {
-            const dx = touches[0].clientX - touches[1].clientX;
-            const dy = touches[0].clientY - touches[1].clientY;
-            return Math.sqrt(dx * dx + dy * dy);
-        }
-        
-        function getTouchCenter(touches) {
-            const rect = svg.getBoundingClientRect();
-            return {
-                x: (touches[0].clientX + touches[1].clientX) / 2 - rect.left,
-                y: (touches[0].clientY + touches[1].clientY) / 2 - rect.top
-            };
-        }
         
         function updateTransform() {
-            const groups = ['gridLines', 'oceanBorders', 'countries', 'countryBorders', 'continentBorders', 'countryLabels'];
-            groups.forEach(id => {
+            const transformValue = `translate(${currentX}, ${currentY}) scale(${currentScale})`;
+            ['gridLines', 'countries', 'countryLabels'].forEach(id => {
                 const group = document.getElementById(id);
-                if (group) {
-                    // style 대신 setAttribute 사용
-                    group.setAttribute('transform', `translate(${currentX}, ${currentY}) scale(${currentScale})`);
-                }
+                if (group) group.setAttribute('transform', transformValue);
             });
         }
         
-        // 다운로드 기능
+        svg.addEventListener('wheel', e => {
+            e.preventDefault();
+            const rect = svg.getBoundingClientRect();
+            const point = svg.createSVGPoint();
+            point.x = e.clientX - rect.left;
+            point.y = e.clientY - rect.top;
+            const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
+            const scaleFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            const newScale = Math.max(0.5, Math.min(20, currentScale * scaleFactor));
+            currentX = svgPoint.x - (svgPoint.x - currentX) * (newScale / currentScale);
+            currentY = svgPoint.y - (svgPoint.y - currentY) * (newScale / currentScale);
+            currentScale = newScale;
+            updateTransform();
+        });
+
+        svg.addEventListener('mousedown', e => { isDragging = true; dragStart.x = e.clientX - currentX; dragStart.y = e.clientY - currentY; svg.style.cursor = 'grabbing'; });
+        svg.addEventListener('mousemove', e => { if (isDragging) { currentX = e.clientX - dragStart.x; currentY = e.clientY - dragStart.y; updateTransform(); }});
+        svg.addEventListener('mouseup', () => { isDragging = false; svg.style.cursor = 'grab'; });
+        svg.addEventListener('mouseleave', () => { isDragging = false; svg.style.cursor = 'grab'; });
+
         function downloadSVG() {
-            // 현재 변환 상태를 반영한 SVG 생성
-            const svgClone = svg.cloneNode(true);
-            svgClone.style.transform = '';
-            svgClone.style.width = baseMapWidth + 'px';
-            svgClone.style.height = baseMapHeight + 'px';
-            
-            const svgData = new XMLSerializer().serializeToString(svgClone);
+            const svgEl = document.getElementById('worldMap');
+            svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            const svgData = svgEl.outerHTML;
             const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = 'world_map.svg';
-            document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
-        
+
         function downloadPNG() {
+            const svgEl = document.getElementById('worldMap');
             const canvas = document.createElement('canvas');
+            canvas.width = mapWidth * 2; // 고화질 출력을 위해 2배 크기
+            canvas.height = mapHeight * 2;
             const ctx = canvas.getContext('2d');
-            const svgData = svg.outerHTML;
-            
-            canvas.width = 2400;
-            canvas.height = 1200;
-            
+            const svgData = new XMLSerializer().serializeToString(svgEl);
             const img = new Image();
-            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-            const url = URL.createObjectURL(svgBlob);
-            
-            img.onload = function() {
-                // 배경색 설정
-                ctx.fillStyle = '#87CEEB';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // SVG 그리기
+            img.onload = () => {
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                
-                canvas.toBlob(function(blob) {
-                    const downloadUrl = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = downloadUrl;
-                    a.download = 'world_map.png';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(downloadUrl);
-                });
-                
-                URL.revokeObjectURL(url);
+                const url = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'world_map.png';
+                a.click();
             };
-            
-            img.onerror = function() {
-                alert('PNG 다운로드 중 오류가 발생했습니다.');
-                URL.revokeObjectURL(url);
-            };
-            
-            img.src = url;
+            img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
         }
-        
-        // 지도 초기화
+
         loadWorldData();
     </script>
 </body>
