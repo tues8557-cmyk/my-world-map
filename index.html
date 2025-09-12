@@ -74,7 +74,234 @@
         let mapWidth = 1200, mapHeight = 600;
 
         const pastelColors = [ '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E0BBE4', '#FFC3A0', '#B5EAD7', '#C7CEEA', '#FFDAB9' ];
-        const countryNames = { "AF": "아프가니스탄", "AO": "앙골라", "AL": "알바니아", "AE": "아랍에미리트", "AR": "아르헨티나", "AM": "아르메니아", "TF": "프랑스령 남방 및 남극", "AU": "호주", "AT": "오스트리아", "AZ": "아제르바이잔", "BI": "부룬디", "BE": "벨기에", "BJ": "베냉", "BF": "부르키나파소", "BD": "방글라데시", "BG": "불가리아", "BA": "보스니아 헤르체고비나", "BY": "벨라루스", "BZ": "벨리즈", "BM": "버뮤다", "BO": "볼리비아", "BR": "브라질", "BN": "브루나이", "BT": "부탄", "BW": "보츠와나", "CF": "중앙아프리카 공화국", "CA": "캐나다", "CH": "스위스", "CL": "칠레", "CN": "중국", "CI": "코트디부아르", "CM": "카메룬", "CD": "콩고 민주 공화국", "CG": "콩고 공화국", "CO": "콜롬비아", "CR": "코스타리카", "CU": "쿠바", "CY": "키프로스", "CZ": "체코", "DE": "독일", "DJ": "지부티", "DK": "덴마크", "DO": "도미니카 공화국", "DZ": "알제리", "EC": "에콰도르", "EG": "이집트", "ER": "에리트레아", "ES": "스페인", "EE": "에스토니아", "ET": "에티오피아", "FI": "핀란드", "FJ": "피지", "GA": "가봉", "GB": "영국", "GE": "조지아", "GH": "가나", "GN": "기니", "GM": "감비아", "GW": "기니비사우", "GQ": "적도 기니", "GR": "그리스", "GL": "그린란드", "GT": "과테말라", "GY": "가이아나", "HN": "온두라스", "HR": "크로아티아", "HT": "아이티", "HU": "헝가리", "ID": "인도네시아", "IN": "인도", "IE": "아일랜드", "IR": "이란", "IQ": "이라크", "IS": "아이슬란드", "IL": "이스라엘", "IT": "이탈리아", "JM": "자메이카", "JO": "요르단", "JP": "일본", "KZ": "카자흐스탄", "KE": "케냐", "KG": "키르기스스탄", "KH": "캄보디아", "KR": "대한민국", "XK": "코소보", "KW": "쿠웨이트", "LA": "라오스", "LB": "레바논", "LR": "라이베리아", "LY": "리비아", "LK": "스리랑카", "LS": "레소토", "LT": "리투아니아", "LU": "룩셈부르크", "LV": "라트비아", "MA": "모로코", "MD": "몰도바", "MG": "마다가스카르", "MX": "멕시코", "MK": "북마케도니아", "ML": "말리", "MM": "미얀마", "ME": "몬테네그로", "MN": "몽골", "MZ": "모잠비크", "MR": "모리타니", "MW": "말라위", "MY": "말레이시아", "NA": "나미비아", "NC": "누벨칼레도니", "NE": "니제르", "NG": "나이지리아", "NI": "니카라과", "NL": "네덜란드", "NO": "노르웨이", "NP": "네팔", "NZ": "뉴질랜드", "OM": "오만", "PK": "파키스탄", "PA": "파나마", "PE": "페루", "PH": "필리핀", "PG": "파푸아뉴기니", "PL": "폴란드", "PR": "푸에르토리코", "KP": "조선민주주의인민공화국", "PT": "포르투갈", "PY": "파라과이", "QA": "카타르", "RO": "루마니아", "RU": "러시아", "RW": "르완다", "EH": "서사하라", "SA": "사우디아라비아", "SD": "수단", "SS": "남수단", "SN": "세네갈", "SB": "솔로몬 제도", "SL": "시에라리온", "SV": "엘살바도르", "SO": "소말리아", "RS": "세르비아", "SR": "수리남", "SK": "슬로바키아", "SI": "슬로베니아", "SE": "스웨덴", "SZ": "에스와티니", "SY": "시리아", "TD": "차드", "TG": "토고", "TH": "태국", "TJ": "타지키스탄", "TM": "투르크메니스탄", "TL": "동티모르", "TT": "트리니다드 토바고", "TN": "튀니지", "TR": "튀르키예", "TW": "대만", "TZ": "탄자니아", "UG": "우간다", "UA": "우크라이나", "UY": "우루과이", "US": "미국", "UZ": "우즈베키스탄", "VE": "베네수엘라", "VN": "베트남", "VU": "바누아투", "PS": "팔레스타인", "YE": "예멘", "ZA": "남아프리카 공화국", "ZM": "잠비아", "ZW": "짐바브웨", "AW": "아루바", "AI": "앵귈라", "AS": "아메리칸사모아", "AG": "앤티가 바부다", "BH": "바레인", "BB": "바베이도스", "BL": "생바르텔레미", "BS": "바하마", "IO": "영국령 인도양 지역", "KY": "케이맨 제도", "KM": "코모로", "CV": "카보베르데", "CK": "쿡 제도", "CW": "퀴라소", "DM": "도미니카 연방", "FK": "포클랜드 제도", "FO": "페로 제도", "FM": "미크로네시아 연방", "GD": "그레나다", "GU": "괌", "GG": "건지", "HK": "홍콩", "IM": "맨섬", "JE": "저지", "KI": "키리바시", "KN": "세인트키츠 네비스", "LC": "세인트루시아", "LI": "리히텐슈타인", "MO": "마카오", "MF": "생마르탱", "MV": "몰디브", "MS": "몬트세랫", "MU": "모리셔스", "MP": "북마리아나 제도", "MT": "몰타", "NU": "니우에", "NR": "나우루", "PN": "핏케언 제도", "PW": "팔라우", "SM": "산마리노", "ST": "상투메 프린시페", "SC": "세이셸", "SG": "싱가포르", "SH": "세인트헬레나", "SX": "신트마르턴", "TC": "터크스 케이커스 제도", "TO": "통가", "TV": "투발루", "VC": "세인트빈센트 그레나딘", "VG": "영국령 버진아일랜드", "VI": "미국령 버진아일랜드", "WS": "사모아", "GS": "사우스조지아 사우스샌드위치 제도" };
+        const countryNames = {
+            "AF": "아프가니스탄",
+            "AO": "앙골라",
+            "AL": "알바니아",
+            "AE": "아랍에미리트",
+            "AR": "아르헨티나",
+            "AM": "아르메니아",
+            "TF": "프랑스령 남방 및 남극",
+            "AU": "호주",
+            "AT": "오스트리아",
+            "AZ": "아제르바이잔",
+            "BI": "부룬디",
+            "BE": "벨기에",
+            "BJ": "베냉",
+            "BF": "부르키나파소",
+            "BD": "방글라데시",
+            "BG": "불가리아",
+            "BA": "보스니아 헤르체고비나",
+            "BY": "벨라루스",
+            "BZ": "벨리즈",
+            "BM": "버뮤다",
+            "BO": "볼리비아",
+            "BR": "브라질",
+            "BN": "브루나이",
+            "BT": "부탄",
+            "BW": "보츠와나",
+            "CF": "중앙아프리카 공화국",
+            "CA": "캐나다",
+            "CH": "스위스",
+            "CL": "칠레",
+            "CN": "중국",
+            "CI": "코트디부아르",
+            "CM": "카메룬",
+            "CD": "콩고 민주 공화국",
+            "CG": "콩고 공화국",
+            "CO": "콜롬비아",
+            "CR": "코스타리카",
+            "CU": "쿠바",
+            "CY": "키프로스",
+            "CZ": "체코",
+            "DE": "독일",
+            "DJ": "지부티",
+            "DK": "덴마크",
+            "DO": "도미니카 공화국",
+            "DZ": "알제리",
+            "EC": "에콰도르",
+            "EG": "이집트",
+            "ER": "에리트레아",
+            "ES": "스페인",
+            "EE": "에스토니아",
+            "ET": "에티오피아",
+            "FI": "핀란드",
+            "FJ": "피지",
+            "GA": "가봉",
+            "GB": "영국",
+            "GE": "조지아",
+            "GH": "가나",
+            "GN": "기니",
+            "GM": "감비아",
+            "GW": "기니비사우",
+            "GQ": "적도 기니",
+            "GR": "그리스",
+            "GL": "그린란드",
+            "GT": "과테말라",
+            "GY": "가이아나",
+            "HN": "온두라스",
+            "HR": "크로아티아",
+            "HT": "아이티",
+            "HU": "헝가리",
+            "ID": "인도네시아",
+            "IN": "인도",
+            "IE": "아일랜드",
+            "IR": "이란",
+            "IQ": "이라크",
+            "IS": "아이슬란드",
+            "IL": "이스라엘",
+            "IT": "이탈리아",
+            "JM": "자메이카",
+            "JO": "요르단",
+            "JP": "일본",
+            "KZ": "카자흐스탄",
+            "KE": "케냐",
+            "KG": "키르기스스탄",
+            "KH": "캄보디아",
+            "KR": "대한민국",
+            "XK": "코소보",
+            "KW": "쿠웨이트",
+            "LA": "라오스",
+            "LB": "레바논",
+            "LR": "라이베리아",
+            "LY": "리비아",
+            "LK": "스리랑카",
+            "LS": "레소토",
+            "LT": "리투아니아",
+            "LU": "룩셈부르크",
+            "LV": "라트비아",
+            "MA": "모로코",
+            "MD": "몰도바",
+            "MG": "마다가스카르",
+            "MX": "멕시코",
+            "MK": "북마케도니아",
+            "ML": "말리",
+            "MM": "미얀마",
+            "ME": "몬테네그로",
+            "MN": "몽골",
+            "MZ": "모잠비크",
+            "MR": "모리타니",
+            "MW": "말라위",
+            "MY": "말레이시아",
+            "NA": "나미비아",
+            "NC": "누벨칼레도니",
+            "NE": "니제르",
+            "NG": "나이지리아",
+            "NI": "니카라과",
+            "NL": "네덜란드",
+            "NO": "노르웨이",
+            "NP": "네팔",
+            "NZ": "뉴질랜드",
+            "OM": "오만",
+            "PK": "파키스탄",
+            "PA": "파나마",
+            "PE": "페루",
+            "PH": "필리핀",
+            "PG": "파푸아뉴기니",
+            "PL": "폴란드",
+            "PR": "푸에르토리코",
+            "KP": "조선민주주의인민공화국",
+            "PT": "포르투갈",
+            "PY": "파라과이",
+            "QA": "카타르",
+            "RO": "루마니아",
+            "RU": "러시아",
+            "RW": "르완다",
+            "EH": "서사하라",
+            "SA": "사우디아라비아",
+            "SD": "수단",
+            "SS": "남수단",
+            "SN": "세네갈",
+            "SB": "솔로몬 제도",
+            "SL": "시에라리온",
+            "SV": "엘살바도르",
+            "SO": "소말리아",
+            "RS": "세르비아",
+            "SR": "수리남",
+            "SK": "슬로바키아",
+            "SI": "슬로베니아",
+            "SE": "스웨덴",
+            "SZ": "에스와티니",
+            "SY": "시리아",
+            "TD": "차드",
+            "TG": "토고",
+            "TH": "태국",
+            "TJ": "타지키스탄",
+            "TM": "투르크메니스탄",
+            "TL": "동티모르",
+            "TT": "트리니다드 토바고",
+            "TN": "튀니지",
+            "TR": "튀르키예",
+            "TW": "대만",
+            "TZ": "탄자니아",
+            "UG": "우간다",
+            "UA": "우크라이나",
+            "UY": "우루과이",
+            "US": "미국",
+            "UZ": "우즈베키스탄",
+            "VE": "베네수엘라",
+            "VN": "베트남",
+            "VU": "바누아투",
+            "PS": "팔레스타인",
+            "YE": "예멘",
+            "ZA": "남아프리카 공화국",
+            "ZM": "잠비아",
+            "ZW": "짐바브웨",
+            "AW": "아루바",
+            "AI": "앵귈라",
+            "AS": "아메리칸사모아",
+            "AG": "앤티가 바부다",
+            "BH": "바레인",
+            "BB": "바베이도스",
+            "BL": "생바르텔레미",
+            "BS": "바하마",
+            "IO": "영국령 인도양 지역",
+            "KY": "케이맨 제도",
+            "KM": "코모로",
+            "CV": "카보베르데",
+            "CK": "쿡 제도",
+            "CW": "퀴라소",
+            "DM": "도미니카 연방",
+            "FK": "포클랜드 제도",
+            "FO": "페로 제도",
+            "FM": "미크로네시아 연방",
+            "GD": "그레나다",
+            "GU": "괌",
+            "GG": "건지",
+            "HK": "홍콩",
+            "IM": "맨섬",
+            "JE": "저지",
+            "KI": "키리바시",
+            "KN": "세인트키츠 네비스",
+            "LC": "세인트루시아",
+            "LI": "리히텐슈타인",
+            "MO": "마카오",
+            "MF": "생마르탱",
+            "MV": "몰디브",
+            "MS": "몬트세랫",
+            "MU": "모리셔스",
+            "MP": "북마리아나 제도",
+            "MT": "몰타",
+            "NU": "니우에",
+            "NR": "나우루",
+            "PN": "핏케언 제도",
+            "PW": "팔라우",
+            "SM": "산마리노",
+            "ST": "상투메 프린시페",
+            "SC": "세이셸",
+            "SG": "싱가포르",
+            "SH": "세인트헬레나",
+            "SX": "신트마르턴",
+            "TC": "터크스 케이커스 제도",
+            "TO": "통가",
+            "TV": "투발루",
+            "VC": "세인트빈센트 그레나딘",
+            "VG": "영국령 버진아일랜드",
+            "VI": "미국령 버진아일랜드",
+            "WS": "사모아",
+            "GS": "사우스조지아 사우스샌드위치 제도"
+        };
+
 
         const mercatorProjection = (lon, lat) => [(lon + 180) * (mapWidth / 360), (mapHeight / 2) - (mapWidth / (2 * Math.PI)) * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360))];
         const geoJsonToSvgPath = (coordinates, type) => {
@@ -118,7 +345,8 @@
             mapContainer.style.width = mapWidth + 'px'; mapContainer.style.height = mapHeight + 'px';
             svg.innerHTML = `<g id="gridLines"></g><g id="countries"></g><g id="countryLabels"></g>`;
             drawMap();
-            updateDynamicSizes();
+            updateDynamicSizes(); // [수정] 최초 로드 시에만 글자 크기 자동 조절
+            updateCountryList(); // [추가] 초기 국가 목록 업데이트
         }
 
         const isOverlapping = (box1, box2) => !(box1.x + box1.width < box2.x || box2.x + box2.width < box1.x || box1.y + box1.height < box2.y || box2.y + box2.height < box1.y);
@@ -260,13 +488,16 @@
         
         function updateCountryList() {
             const listUl = document.getElementById('countryList');
-            const wrapper = document.querySelector('.map-wrapper');
-            const wrapperRect = wrapper.getBoundingClientRect();
+            const mapContainer = document.getElementById('mapContainer');
+            const svgRect = svg.getBoundingClientRect();
+            
             const visibleCountries = new Set();
 
             document.querySelectorAll('.country-label').forEach(label => {
                 const labelRect = label.getBoundingClientRect();
-                if (!(labelRect.right < wrapperRect.left || labelRect.left > wrapperRect.right || labelRect.bottom < wrapperRect.top || labelRect.top > wrapperRect.bottom)) {
+                // 레이블이 SVG 뷰포트 안에 들어오는지 확인
+                if (labelRect.right > svgRect.left && labelRect.left < svgRect.right &&
+                    labelRect.bottom > svgRect.top && labelRect.top < svgRect.bottom) {
                     visibleCountries.add(label.textContent);
                 }
             });
@@ -285,31 +516,39 @@
         document.getElementById('mapSize').addEventListener('input', function() {
             const wrapper = document.querySelector('.map-wrapper');
             const oldWidth = mapWidth;
-            const centerXRatio = (wrapper.scrollLeft + wrapper.clientWidth / 2) / oldWidth;
-            const centerYRatio = (wrapper.scrollTop + wrapper.clientHeight / 2) / (oldWidth / 2);
+            // 현재 스크롤 위치 비율 계산
+            const scrollLeftRatio = wrapper.scrollLeft / (mapWidth - wrapper.clientWidth);
+            const scrollTopRatio = wrapper.scrollTop / (mapHeight - wrapper.clientHeight);
+
             mapWidth = parseInt(this.value);
             mapHeight = mapWidth / 2;
             document.getElementById('mapSizeValue').textContent = `${mapWidth}x${mapHeight}px`;
+            
             initMap();
-            // [수정] 지도 크기 조절 시 글자 크기 자동 조절 비활성화
-            // updateDynamicSizes(); 
+            
             requestAnimationFrame(() => {
-                const newScrollLeft = (centerXRatio * mapWidth) - wrapper.clientWidth / 2;
-                const newScrollTop = (centerYRatio * mapHeight) - wrapper.clientHeight / 2;
-                wrapper.scrollLeft = newScrollLeft;
-                wrapper.scrollTop = newScrollTop;
+                // 새로운 스크롤 위치 계산
+                const newScrollLeft = scrollLeftRatio * (mapWidth - wrapper.clientWidth);
+                const newScrollTop = scrollTopRatio * (mapHeight - wrapper.clientHeight);
+
+                wrapper.scrollLeft = newScrollLeft || 0;
+                wrapper.scrollTop = newScrollTop || 0;
             });
         });
         
         document.getElementById('toggleListBtn').addEventListener('click', () => {
-            document.getElementById('countryListPanel').classList.toggle('hidden');
+            const panel = document.getElementById('countryListPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                updateCountryList(); // 목록이 열릴 때 업데이트
+            }
         });
 
         const svg = document.getElementById('worldMap');
         
         const updateTransform = () => {
             ['gridLines', 'countries', 'countryLabels'].forEach(id => document.getElementById(id)?.setAttribute('transform', `translate(${currentX}, ${currentY}) scale(${currentScale})`));
-            requestAnimationFrame(updateCountryList);
+            requestAnimationFrame(updateCountryList); // [추가] 변환 후 국가 목록 업데이트
         };
         
         svg.addEventListener('wheel', e => {
@@ -317,9 +556,14 @@
             const rect = svg.getBoundingClientRect();
             const point = svg.createSVGPoint(); 
             point.x = e.clientX - rect.left; point.y = e.clientY - rect.top;
+            
+            // 현재 SVG 좌표계에서의 마우스 위치 계산
             const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
+            
             const scaleFactor = e.deltaY > 0 ? 0.9 : 1.1;
             const newScale = Math.max(0.5, Math.min(50, currentScale * scaleFactor));
+
+            // [수정] 줌 인/아웃 시 마우스 위치 중심으로 변환
             currentX = svgPoint.x - (svgPoint.x - currentX) * (newScale / currentScale);
             currentY = svgPoint.y - (svgPoint.y - currentY) * (newScale / currentScale);
             currentScale = newScale;
@@ -328,7 +572,7 @@
 
         svg.addEventListener('mousedown', e => { isDragging = true; panStart.x = currentX; panStart.y = currentY; dragStart.x = e.clientX; dragStart.y = e.clientY; svg.style.cursor = 'grabbing'; });
         svg.addEventListener('mousemove', e => { if (isDragging) { const dx = e.clientX - dragStart.x; const dy = e.clientY - dragStart.y; currentX = panStart.x + dx; currentY = panStart.y + dy; updateTransform(); } });
-        const endDrag = () => { isDragging = false; svg.style.cursor = 'grab'; updateCountryList(); };
+        const endDrag = () => { isDragging = false; svg.style.cursor = 'grab'; updateCountryList(); }; // [추가] 드래그 종료 후 국가 목록 업데이트
         svg.addEventListener('mouseup', endDrag);
         svg.addEventListener('mouseleave', endDrag);
 
