@@ -31,8 +31,8 @@
         .country-hover { stroke-width: 1.5; stroke: #c0392b; filter: brightness(1.1); }
         .grid-line { fill: none; stroke: #666; stroke-width: 0.2; opacity: 0.5; pointer-events: none; }
         .country-label { font-family: 'Noto Sans KR', sans-serif; text-anchor: middle; fill: #2c3e50; font-weight: 600; pointer-events: none; paint-order: stroke; stroke: white; stroke-linejoin: round; transition: all 0.1s ease-in-out; }
-        /* [추가] 이름 라벨 호버 효과 CSS */
-        .label-hover { fill: #c0392b; stroke: #c0392b; }
+        /* [수정] 이름 라벨 호버 시 글자색만 변경 */
+        .label-hover { fill: #c0392b; }
     </style>
 </head>
 <body>
@@ -62,7 +62,7 @@
         let mapWidth = 1200, mapHeight = 600;
 
         const pastelColors = [ '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E0BBE4', '#FFC3A0', '#B5EAD7', '#C7CEEA', '#FFDAB9' ];
-        const countryNames = { "AF": "아프가니스탄", "AO": "앙골라", "AL": "알바니아", "AE": "아랍에미리트", "AR": "아르헨티나", "AM": "아르메니아", "TF": "프랑스령 남방 및 남극", "AU": "호주", "AT": "오스트리아", "AZ": "아제르바이잔", "BI": "부룬디", "BE": "벨기에", "BJ": "베냉", "BF": "부르키나파소", "BD": "방글라데시", "BG": "불가리아", "BA": "보스니아 헤르체고비나", "BY": "벨라루스", "BZ": "벨리즈", "BM": "버뮤다", "BO": "볼리비아", "BR": "브라질", "BN": "브루나이", "BT": "부탄", "BW": "보츠와나", "CF": "중앙아프리카 공화국", "CA": "캐나다", "CH": "스위스", "CL": "칠레", "CN": "중국", "CI": "코트디부아르", "CM": "카메룬", "CD": "콩고 민주 공화국", "CG": "콩고 공화국", "CO": "콜롬비아", "CR": "코스타리카", "CU": "쿠바", "CY": "키프로스", "CZ": "체코", "DE": "독일", "DJ": "지부티", "DK": "덴마크", "DO": "도미니카 공화국", "DZ": "알제리", "EC": "에콰도르", "EG": "이집트", "ER": "에리트레아", "ES": "스페인", "EE": "에스토니아", "ET": "에티오피아", "FI": "핀란드", "FJ": "피지", "GA": "가봉", "GB": "영국", "GE": "조지아", "GH": "가나", "GN": "기니", "GM": "감비아", "GW": "기니비사우", "GQ": "적도 기니", "GR": "그리스", "GL": "그린란드", "GT": "과테말라", "GY": "가이아나", "HN": "온두라스", "HR": "크로아티아", "HT": "아이티", "HU": "헝가리", "ID": "인도네시아", "IN": "인도", "IE": "아일랜드", "IR": "이란", "IQ": "이라크", "IS": "아이슬란드", "IL": "이스라엘", "IT": "이탈리아", "JM": "자메이카", "JO": "요르단", "JP": "일본", "KZ": "카자흐스탄", "KE": "케냐", "KG": "키르기스스탄", "KH": "캄보디아", "KR": "대한민국", "XK": "코소보", "KW": "쿠웨이트", "LA": "라오스", "LB": "레바논", "LR": "라이베리아", "LY": "리비아", "LK": "스리랑카", "LS": "레소토", "LT": "리투아니아", "LU": "룩셈부르크", "LV": "라트비아", "MA": "모로코", "MD": "몰도바", "MG": "마다가스카르", "MX": "멕시코", "MK": "북마케도니아", "ML": "말리", "MM": "미얀마", "ME": "몬테네그로", "MN": "몽골", "MZ": "모잠비크", "MR": "모리타니", "MW": "말라위", "MY": "말레이시아", "NA": "나미비아", "NC": "누벨칼레도니", "NE": "니제르", "NG": "나이지리아", "NI": "니카라과", "NL": "네덜란드", "NO": "노르웨이", "NP": "네팔", "NZ": "뉴질랜드", "OM": "오만", "PK": "파키스탄", "PA": "파나마", "PE": "페루", "PH": "필리핀", "PG": "파푸아뉴기니", "PL": "폴란드", "PR": "푸에르토리코", "KP": "조선민주주의인민공화국", "PT": "포르투갈", "PY": "파라과이", "QA": "카타르", "RO": "루마니아", "RU": "러시아", "RW": "르완다", "EH": "서사하라", "SA": "사우디아라비아", "SD": "수단", "SS": "남수단", "SN": "세네갈", "SB": "솔로몬 제도", "SL": "시에라리온", "SV": "엘살바도르", "SO": "소말리아", "RS": "세르비아", "SR": "수리남", "SK": "슬로바키아", "SI": "슬로베니아", "SE": "스웨덴", "SZ": "에스와티니", "SY": "시리아", "TD": "차드", "TG": "토고", "TH": "태국", "TJ": "타지키스탄", "TM": "투르크메니스탄", "TL": "동티모르", "TT": "트리니다드 토바고", "TN": "튀니지", "TR": "터키", "TW": "대만", "TZ": "탄자니아", "UG": "우간다", "UA": "우크라이나", "UY": "우루과이", "US": "미국", "UZ": "우즈베키스탄", "VE": "베네수엘라", "VN": "베트남", "VU": "바누아투", "PS": "팔레스타인", "YE": "예멘", "ZA": "남아프리카 공화국", "ZM": "잠비아", "ZW": "짐바브웨", "AW": "아루바", "AI": "앵귈라", "AS": "아메리칸사모아", "AG": "앤티가 바부다", "BH": "바레인", "BB": "바베이도스", "BL": "생바르텔레미", "BS": "바하마", "IO": "영국령 인도양 지역", "KY": "케이맨 제도", "KM": "코모로", "CV": "카보베르데", "CK": "쿡 제도", "CW": "퀴라소", "DM": "도미니카 연방", "FK": "포클랜드 제도", "FO": "페로 제도", "FM": "미크로네시아 연방", "GD": "그레나다", "GU": "괌", "GG": "건지", "HK": "홍콩", "IM": "맨섬", "JE": "저지", "KI": "키리바시", "KN": "세인트키츠 네비스", "LC": "세인트루시아", "LI": "리히텐슈타인", "MO": "마카오", "MF": "생마르탱", "MV": "몰디브", "MS": "몬트세랫", "MU": "모리셔스", "MP": "북마리아나 제도", "MT": "몰타", "NU": "니우에", "NR": "나우루", "PN": "핏케언 제도", "PW": "팔라우", "SM": "산마리노", "ST": "상투메 프린시페", "SC": "세이셸", "SG": "싱가포르", "SH": "세인트헬레나", "SX": "신트마르턴", "TC": "터크스 케이커스 제도", "TO": "통가", "TV": "투발루", "VC": "세인트빈센트 그레나딘", "VG": "영국령 버진아일랜드", "VI": "미국령 버진아일랜드", "WS": "사모아" };
+        const countryNames = { "AF": "아프가니스탄", "AO": "앙골라", "AL": "알바니아", "AE": "아랍에미리트", "AR": "아르헨티나", "AM": "아르메니아", "TF": "프랑스령 남방 및 남극", "AU": "호주", "AT": "오스트리아", "AZ": "아제르바이잔", "BI": "부룬디", "BE": "벨기에", "BJ": "베냉", "BF": "부르키나파소", "BD": "방글라데시", "BG": "불가리아", "BA": "보스니아 헤르체고비나", "BY": "벨라루스", "BZ": "벨리즈", "BM": "버뮤다", "BO": "볼리비아", "BR": "브라질", "BN": "브루나이", "BT": "부탄", "BW": "보츠와나", "CF": "중앙아프리카 공화국", "CA": "캐나다", "CH": "스위스", "CL": "칠레", "CN": "중국", "CI": "코트디부아르", "CM": "카메룬", "CD": "콩고 민주 공화국", "CG": "콩고 공화국", "CO": "콜롬비아", "CR": "코스타리카", "CU": "쿠바", "CY": "키프로스", "CZ": "체코", "DE": "독일", "DJ": "지부티", "DK": "덴마크", "DO": "도미니카 공화국", "DZ": "알제리", "EC": "에콰도르", "EG": "이집트", "ER": "에리트레아", "ES": "스페인", "EE": "에스토니아", "ET": "에티오피아", "FI": "핀란드", "FJ": "피지", "GA": "가봉", "GB": "영국", "GE": "조지아", "GH": "가나", "GN": "기니", "GM": "감비아", "GW": "기니비사우", "GQ": "적도 기니", "GR": "그리스", "GL": "그린란드", "GT": "과테말라", "GY": "가이아나", "HN": "온두라스", "HR": "크로아티아", "HT": "아이티", "HU": "헝가리", "ID": "인도네시아", "IN": "인도", "IE": "아일랜드", "IR": "이란", "IQ": "이라크", "IS": "아이슬란드", "IL": "이스라엘", "IT": "이탈리아", "JM": "자메이카", "JO": "요르단", "JP": "일본", "KZ": "카자흐스탄", "KE": "케냐", "KG": "키르기스스탄", "KH": "캄보디아", "KR": "대한민국", "XK": "코소보", "KW": "쿠웨이트", "LA": "라오스", "LB": "레바논", "LR": "라이베리아", "LY": "리비아", "LK": "스리랑카", "LS": "레소토", "LT": "리투아니아", "LU": "룩셈부르크", "LV": "라트비아", "MA": "모로코", "MD": "몰도바", "MG": "마다가스카르", "MX": "멕시코", "MK": "북마케도니아", "ML": "말리", "MM": "미얀마", "ME": "몬테네그로", "MN": "몽골", "MZ": "모잠비크", "MR": "모리타니", "MW": "말라위", "MY": "말레이시아", "NA": "나미비아", "NC": "누벨칼레도니", "NE": "니제르", "NG": "나이지리아", "NI": "니카라과", "NL": "네덜란드", "NO": "노르웨이", "NP": "네팔", "NZ": "뉴질랜드", "OM": "오만", "PK": "파키스탄", "PA": "파나마", "PE": "페루", "PH": "필리핀", "PG": "파푸아뉴기니", "PL": "폴란드", "PR": "푸에르토리코", "KP": "조선민주주의인민공화국", "PT": "포르투갈", "PY": "파라과이", "QA": "카타르", "RO": "루마니아", "RU": "러시아", "RW": "르완다", "EH": "서사하라", "SA": "사우디아라비아", "SD": "수단", "SS": "남수단", "SN": "세네갈", "SB": "솔로몬 제도", "SL": "시에라리온", "SV": "엘살바도르", "SO": "소말리아", "RS": "세르비아", "SR": "수리남", "SK": "슬로바키아", "SI": "슬로베니아", "SE": "스웨덴", "SZ": "에스와티니", "SY": "시리아", "TD": "차드", "TG": "토고", "TH": "태국", "TJ": "타지키스탄", "TM": "투르크메니스탄", "TL": "동티모르", "TT": "트리니다드 토바고", "TN": "튀니지", "TR": "튀르키예", "TW": "대만", "TZ": "탄자니아", "UG": "우간다", "UA": "우크라이나", "UY": "우루과이", "US": "미국", "UZ": "우즈베키스탄", "VE": "베네수엘라", "VN": "베트남", "VU": "바누아투", "PS": "팔레스타인", "YE": "예멘", "ZA": "남아프리카 공화국", "ZM": "잠비아", "ZW": "짐바브웨", "AW": "아루바", "AI": "앵귈라", "AS": "아메리칸사모아", "AG": "앤티가 바부다", "BH": "바레인", "BB": "바베이도스", "BL": "생바르텔레미", "BS": "바하마", "IO": "영국령 인도양 지역", "KY": "케이맨 제도", "KM": "코모로", "CV": "카보베르데", "CK": "쿡 제도", "CW": "퀴라소", "DM": "도미니카 연방", "FK": "포클랜드 제도", "FO": "페로 제도", "FM": "미크로네시아 연방", "GD": "그레나다", "GU": "괌", "GG": "건지", "HK": "홍콩", "IM": "맨섬", "JE": "저지", "KI": "키리바시", "KN": "세인트키츠 네비스", "LC": "세인트루시아", "LI": "리히텐슈타인", "MO": "마카오", "MF": "생마르탱", "MV": "몰디브", "MS": "몬트세랫", "MU": "모리셔스", "MP": "북마리아나 제도", "MT": "몰타", "NU": "니우에", "NR": "나우루", "PN": "핏케언 제도", "PW": "팔라우", "SM": "산마리노", "ST": "상투메 프린시페", "SC": "세이셸", "SG": "싱가포르", "SH": "세인트헬레나", "SX": "신트마르턴", "TC": "터크스 케이커스 제도", "TO": "통가", "TV": "투발루", "VC": "세인트빈센트 그레나딘", "VG": "영국령 버진아일랜드", "VI": "미국령 버진아일랜드", "WS": "사모아", "GS": "사우스조지아 사우스샌드위치 제도" };
 
         const mercatorProjection = (lon, lat) => [(lon + 180) * (mapWidth / 360), (mapHeight / 2) - (mapWidth / (2 * Math.PI)) * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360))];
         const geoJsonToSvgPath = (coordinates, type) => {
@@ -95,19 +95,15 @@
                 worldData.features.sort((a, b) => b.properties.calculatedArea - a.properties.calculatedArea);
                 loadingIndicator.style.display = 'none';
                 initMap();
-            } catch (error) {
-                loadingIndicator.textContent = '지도 데이터 로드에 실패했습니다.';
-            }
+            } catch (error) { loadingIndicator.textContent = '지도 데이터 로드에 실패했습니다.'; }
         }
         
         function initMap() {
             const svg = document.getElementById('worldMap');
             const mapContainer = document.getElementById('mapContainer');
-            svg.setAttribute('width', mapWidth);
-            svg.setAttribute('height', mapHeight);
+            svg.setAttribute('width', mapWidth); svg.setAttribute('height', mapHeight);
             svg.setAttribute('viewBox', `0 0 ${mapWidth} ${mapHeight}`);
-            mapContainer.style.width = mapWidth + 'px';
-            mapContainer.style.height = mapHeight + 'px';
+            mapContainer.style.width = mapWidth + 'px'; mapContainer.style.height = mapHeight + 'px';
             svg.innerHTML = `<g id="gridLines"></g><g id="countries"></g><g id="countryLabels"></g>`;
             drawMap();
             updateDynamicSizes();
@@ -122,7 +118,6 @@
             worldData.features.forEach((feature, index) => {
                 const { properties, geometry } = feature;
                 if (!geometry || properties.ISO_A2 === '-99') return;
-
                 const countryCode = properties.ISO_A2;
                 const countryName = countryNames[countryCode] || properties.ADMIN;
 
@@ -139,22 +134,19 @@
                     const centerLonLat = getPolygonCenter(largestPart);
                     const [x, y] = mercatorProjection(centerLonLat[0], centerLonLat[1]);
                     
-                    label.setAttribute('x', x);
-                    label.setAttribute('y', y);
+                    label.setAttribute('x', x); label.setAttribute('y', y);
                     label.setAttribute('class', 'country-label');
                     label.textContent = countryName;
                     label.dataset.countryCode = countryCode;
                     labelGroup.appendChild(label);
                     
-                    // [추가] 이름 겹침 방지 로직
                     const bbox = label.getBBox();
                     const padding = 5;
                     const paddedBbox = { x: bbox.x - padding, y: bbox.y - padding, width: bbox.width + padding * 2, height: bbox.height + padding * 2 };
                     let isOverlapping = false;
                     for (const placedBox of placedLabelBoxes) {
                         if (!(paddedBbox.x + paddedBbox.width < placedBox.x || placedBox.x + placedBox.width < paddedBbox.x || paddedBbox.y + paddedBbox.height < placedBox.y || placedBox.y + placedBox.height < paddedBbox.y)) {
-                            isOverlapping = true;
-                            break;
+                            isOverlapping = true; break;
                         }
                     }
                     if (isOverlapping) label.remove();
@@ -162,12 +154,10 @@
                 }
             });
 
-            // [추가] 호버 이벤트 리스너 추가
             countryGroup.querySelectorAll('.country').forEach(path => {
                 path.addEventListener('mouseover', handleCountryHover);
                 path.addEventListener('mouseout', handleCountryHover);
             });
-
             drawGridLines();
         }
         
@@ -194,17 +184,14 @@
         };
 
         function drawGridLines() {
-            const grid = document.getElementById('gridLines');
-            grid.innerHTML = '';
+            const grid = document.getElementById('gridLines'); grid.innerHTML = '';
             for (let lon = -180; lon <= 180; lon += 30) {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                let d = 'M';
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); let d = 'M';
                 for (let lat = -85; lat <= 85; lat += 5) d += mercatorProjection(lon, lat).join(',') + 'L';
                 path.setAttribute('d', d.slice(0, -1)); path.setAttribute('class', 'grid-line'); grid.appendChild(path);
             }
             for (let lat = -60; lat <= 80; lat += 30) {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                let d = 'M';
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); let d = 'M';
                 for (let lon = -180; lon <= 180; lon += 5) d += mercatorProjection(lon, lat).join(',') + 'L';
                 path.setAttribute('d', d.slice(0, -1)); path.setAttribute('class', 'grid-line'); grid.appendChild(path);
             }
@@ -235,6 +222,7 @@
             const wrapper = document.querySelector('.map-wrapper');
             const oldWidth = mapWidth;
             const centerXRatio = (wrapper.scrollLeft + wrapper.clientWidth / 2) / oldWidth;
+            const centerYRatio = (wrapper.scrollTop + wrapper.clientHeight / 2) / (oldWidth / 2);
 
             mapWidth = parseInt(this.value);
             mapHeight = mapWidth / 2;
@@ -242,29 +230,23 @@
             
             initMap();
             
-            // [추가] 중앙 기준 크기 조절을 위한 스크롤 위치 조정
             requestAnimationFrame(() => {
                 const newScrollLeft = (centerXRatio * mapWidth) - wrapper.clientWidth / 2;
+                const newScrollTop = (centerYRatio * mapHeight) - wrapper.clientHeight / 2;
                 wrapper.scrollLeft = newScrollLeft;
+                wrapper.scrollTop = newScrollTop;
             });
         });
 
         const svg = document.getElementById('worldMap');
         
-        function updateTransform() {
-            const transformValue = `translate(${currentX}, ${currentY}) scale(${currentScale})`;
-            ['gridLines', 'countries', 'countryLabels'].forEach(id => {
-                const group = document.getElementById(id);
-                if (group) group.setAttribute('transform', transformValue);
-            });
-        }
+        const updateTransform = () => ['gridLines', 'countries', 'countryLabels'].forEach(id => document.getElementById(id)?.setAttribute('transform', `translate(${currentX}, ${currentY}) scale(${currentScale})`));
         
         svg.addEventListener('wheel', e => {
             e.preventDefault();
             const rect = svg.getBoundingClientRect();
             const point = svg.createSVGPoint();
-            point.x = e.clientX - rect.left;
-            point.y = e.clientY - rect.top;
+            point.x = e.clientX - rect.left; point.y = e.clientY - rect.top;
             const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
             const scaleFactor = e.deltaY > 0 ? 0.9 : 1.1;
             const newScale = Math.max(0.5, Math.min(50, currentScale * scaleFactor));
@@ -274,21 +256,14 @@
             updateTransform();
         });
 
-        // [수정] 스크롤 시에도 정확한 위치에서 드래그되도록 로직 변경
         svg.addEventListener('mousedown', e => { 
-            isDragging = true; 
-            panStart.x = currentX;
-            panStart.y = currentY;
-            dragStart.x = e.clientX; 
-            dragStart.y = e.clientY; 
-            svg.style.cursor = 'grabbing'; 
+            isDragging = true; panStart.x = currentX; panStart.y = currentY;
+            dragStart.x = e.clientX; dragStart.y = e.clientY; svg.style.cursor = 'grabbing'; 
         });
         svg.addEventListener('mousemove', e => { 
-            if (isDragging) { 
-                const dx = e.clientX - dragStart.x;
-                const dy = e.clientY - dragStart.y;
-                currentX = panStart.x + dx; 
-                currentY = panStart.y + dy; 
+            if (isDragging) {
+                const dx = e.clientX - dragStart.x; const dy = e.clientY - dragStart.y;
+                currentX = panStart.x + dx; currentY = panStart.y + dy; 
                 updateTransform(); 
             }
         });
@@ -296,16 +271,14 @@
         svg.addEventListener('mouseup', endDrag);
         svg.addEventListener('mouseleave', endDrag);
 
+        const download = (url, filename) => { const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); };
         function downloadSVG() {
             const svgEl = document.getElementById('worldMap');
             svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
             const svgData = svgEl.outerHTML;
             const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'world_map.svg'; a.click(); URL.revokeObjectURL(url);
+            download(URL.createObjectURL(blob), 'world_map.svg');
         }
-
         function downloadPNG() {
             const svgEl = document.getElementById('worldMap');
             const canvas = document.createElement('canvas');
@@ -313,11 +286,7 @@
             const ctx = canvas.getContext('2d');
             const svgData = new XMLSerializer().serializeToString(svgEl);
             const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                const a = document.createElement('a');
-                a.href = canvas.toDataURL('image/png'); a.download = 'world_map.png'; a.click();
-            };
+            img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); download(canvas.toDataURL('image/png'), 'world_map.png'); };
             img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
         }
         
