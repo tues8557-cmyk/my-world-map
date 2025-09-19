@@ -96,7 +96,6 @@
             colorCache.set(code, color);
             return color;
         };
-
         const clampLatitude = lat => {
             let clamped = Math.max(-89.9999, Math.min(89.9999, lat));
             if (clamped < -75) {
@@ -492,7 +491,6 @@
         function updateLabelStyles() {
             const slider = document.getElementById('fontSize');
             if (!slider) return;
-
             const percent = Number(slider.value);
             const fontSize = +(BASE_FONT_SIZE * percent / 100).toFixed(2);
             const labelValue = document.getElementById('fontSizeValue');
@@ -532,6 +530,7 @@
         function resolveLabelCollisions() {
             const labelGroup = document.getElementById('countryLabels');
             const connectorGroup = document.getElementById('labelConnectors');
+
             if (!labelGroup || !connectorGroup) return;
 
             connectorGroup.innerHTML = '';
