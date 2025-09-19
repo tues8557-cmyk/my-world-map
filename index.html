@@ -30,7 +30,7 @@
         .country { stroke-width: 0.5; stroke: #333; transition: all 0.1s ease-in-out; }
         .country-hover { stroke-width: 1.5; stroke: #c0392b; filter: brightness(1.1); }
         .grid-line { fill: none; stroke: #666; stroke-width: 0.2; opacity: 0.5; pointer-events: none; }
-        .country-label { font-family: 'Noto Sans KR', sans-serif; text-anchor: middle; fill: #2c3e50; font-weight: 600; pointer-events: none; paint-order: stroke; stroke: white; stroke-linejoin: round; stroke-width: 1; transition: all 0.1s ease-in-out; font-size: 20px; }
+        .country-label { font-family: 'Noto Sans KR', sans-serif; text-anchor: middle; fill: #2c3e50; font-weight: 600; pointer-events: none; paint-order: stroke; stroke: white; stroke-linejoin: round; stroke-width: 1; transition: all 0.1s ease-in-out; font-size: 6px; }
         .label-hover { fill: #c0392b; }
         .country-callout { stroke: rgba(44, 62, 80, 0.6); stroke-width: 1; fill: none; pointer-events: none; }
         .zoom-control { display: flex; align-items: center; gap: 8px; }
@@ -50,7 +50,7 @@
             <div class="title">🌍 세계지도 학습</div>
             <div class="controls">
                 <div class="control-group"><label>나라 이름</label><label class="toggle"><input type="checkbox" id="showLabels" checked><span class="slider"></span></label></div>
-                <div class="control-group"><label>글자 크기</label><input type="range" id="fontSize" class="size-slider" min="8" max="60" step="1" value="20"><span id="fontSizeValue">20px</span></div>
+                <div class="control-group"><label>글자 크기</label><input type="range" id="fontSize" class="size-slider" min="50" max="200" step="5" value="100"><span id="fontSizeValue">6.0px (100%)</span></div>
                 <div class="control-group">
                     <label>줌</label>
                     <div class="zoom-control">
@@ -85,9 +85,10 @@
         let mapWidth = BASE_MAP_WIDTH, mapHeight = BASE_MAP_HEIGHT;
         const MAX_SCALE = 5;
         const MIN_SCALE = 0.01;
-        const BASE_FONT_SIZE = 20;
+        const BASE_FONT_SIZE = 6;
         const SVG_NS = 'http://www.w3.org/2000/svg';
         const colorCache = new Map();
+
         const getCountryColor = (code, index) => {
             if (colorCache.has(code)) return colorCache.get(code);
             const hue = (index * 137.508) % 360;
@@ -95,7 +96,6 @@
             colorCache.set(code, color);
             return color;
         };
-
         const clampLatitude = lat => {
             let clamped = Math.max(-89.9999, Math.min(89.9999, lat));
             if (clamped < -75) {
@@ -483,7 +483,7 @@
         function updateDynamicSizes() {
             const fontSlider = document.getElementById('fontSize');
             if (fontSlider) {
-                fontSlider.value = BASE_FONT_SIZE;
+                fontSlider.value = '100';
             }
             updateLabelStyles();
         }
@@ -491,9 +491,12 @@
         function updateLabelStyles() {
             const slider = document.getElementById('fontSize');
             if (!slider) return;
-
-            const fontSize = Number(slider.value);
-            document.getElementById('fontSizeValue').textContent = `${fontSize}px`;
+            const percent = Number(slider.value);
+            const fontSize = +(BASE_FONT_SIZE * percent / 100).toFixed(2);
+            const labelValue = document.getElementById('fontSizeValue');
+            if (labelValue) {
+                labelValue.textContent = `${fontSize.toFixed(1)}px (${percent}%)`;
+            }
             document.querySelectorAll('.country-label').forEach(label => {
                 label.setAttribute('font-size', fontSize);
                 label.setAttribute('stroke-width', 1);
@@ -527,6 +530,7 @@
         function resolveLabelCollisions() {
             const labelGroup = document.getElementById('countryLabels');
             const connectorGroup = document.getElementById('labelConnectors');
+
             if (!labelGroup || !connectorGroup) return;
 
             connectorGroup.innerHTML = '';
@@ -546,34 +550,64 @@
                 label.setAttribute('y', targetY);
 
                 let bbox = label.getBBox();
-                let angle = 0;
-                let radius = 0;
-                const step = 18;
-                let iterations = 0;
-                const maxIterations = 160;
+                let moved = false;
 
-                while (placed.some(p => isOverlapping(bbox, p.bbox)) && iterations < maxIterations) {
-                    radius += step;
-                    angle += Math.PI / 4;
-                    targetX = anchorX + radius * Math.cos(angle);
-                    targetY = anchorY + radius * Math.sin(angle);
-                    label.setAttribute('x', targetX);
-                    label.setAttribute('y', targetY);
-                    bbox = label.getBBox();
-                    iterations++;
+                if (placed.some(p => isOverlapping(bbox, p.bbox))) {
+                    const directions = [
+                        { dx: 1, dy: 1 },
+                        { dx: -1, dy: -1 }
+                    ];
+                    const step = 24;
+                    const maxRadius = 960;
+                    let bestPlacement = null;
+
+                    directions.forEach(direction => {
+                        label.setAttribute('x', anchorX);
+                        label.setAttribute('y', anchorY);
+                        let radius = step;
+
+                        while (radius <= maxRadius) {
+                            const candidateX = anchorX + direction.dx * radius;
+                            const candidateY = anchorY + direction.dy * radius;
+                            label.setAttribute('x', candidateX);
+                            label.setAttribute('y', candidateY);
+                            const candidateBBox = label.getBBox();
+
+                            if (!placed.some(p => isOverlapping(candidateBBox, p.bbox))) {
+                                if (!bestPlacement || radius < bestPlacement.radius) {
+                                    bestPlacement = { x: candidateX, y: candidateY, bbox: candidateBBox, radius };
+                                }
+                                break;
+                            }
+
+                            radius += step;
+                        }
+                    });
+
+                    if (bestPlacement) {
+                        targetX = bestPlacement.x;
+                        targetY = bestPlacement.y;
+                        bbox = bestPlacement.bbox;
+                        moved = true;
+                    } else {
+                        label.setAttribute('x', anchorX);
+                        label.setAttribute('y', anchorY);
+                        bbox = label.getBBox();
+                    }
                 }
 
+                label.setAttribute('x', targetX);
+                label.setAttribute('y', targetY);
+                bbox = label.getBBox();
                 placed.push({ bbox });
 
-                if (Math.hypot(targetX - anchorX, targetY - anchorY) > 1) {
-                    const centerX = bbox.x + bbox.width / 2;
-                    const centerY = bbox.y + bbox.height / 2;
+                if (moved) {
                     const callout = document.createElementNS(SVG_NS, 'line');
                     callout.setAttribute('class', 'country-callout');
                     callout.setAttribute('x1', anchorX);
                     callout.setAttribute('y1', anchorY);
-                    callout.setAttribute('x2', centerX);
-                    callout.setAttribute('y2', centerY);
+                    callout.setAttribute('x2', targetX);
+                    callout.setAttribute('y2', targetY);
                     connectorGroup.appendChild(callout);
                 }
             });
